@@ -5,6 +5,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class DAO_Conexao {
+    /* 
     private static final String URL = "jdbc:mysql://localhost:3306/db_LIMS";
     private static final String USUARIO = "adm";
     private static final String SENHA = "1234";
@@ -22,6 +23,6 @@ public class DAO_Conexao {
             e.printStackTrace();
             return null;
         }
-    }
+    }*/
 
 }
