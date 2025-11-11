@@ -26,3 +26,11 @@ replay_pid*
 /out/
 /target/
 *.class
+
+# Java build artifacts
+*.class
+/out/
+/build/
+/target/
+/bin/
+/production/
