@@ -5,10 +5,10 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class DAO_Conexao {
-    /* 
+
     private static final String URL = "jdbc:mysql://localhost:3306/db_LIMS";
-    private static final String USUARIO = "adm";
-    private static final String SENHA = "1234";
+    private static final String USUARIO = "root";
+    private static final String SENHA = "011MYSQL";
 
     public static Connection connect() {
         try {
@@ -23,6 +23,20 @@ public class DAO_Conexao {
             e.printStackTrace();
             return null;
         }
-    }*/
-
+    }
+    public static void main(String[] args) {
+        Connection conexao = connect();
+        if (conexao != null) {
+            System.out.println("🎉 Teste de conexão bem-sucedido!");
+            try {
+                conexao.close();
+                System.out.println("🔒 Conexão encerrada com sucesso.");
+            } catch (SQLException e) {
+                System.out.println("⚠️ Erro ao fechar a conexão.");
+                e.printStackTrace();
+            }
+        } else {
+            System.out.println("🚫 Falha ao conectar ao banco de dados.");
+        }
+    }
 }
