@@ -1,9 +1,9 @@
-package Pck_Persistencia_LIMS;
+package Pck_Model_LIMS;
 
 import java.util.Date;
 
 
-public class Persistencia_a06_Relatorio {
+public class Model_Relatorio_06 {
     private int a06_id_relatorio;
     private int a06_id_projeto;
     private int a06_id_produto;
@@ -13,12 +13,12 @@ public class Persistencia_a06_Relatorio {
     private String a06_texto_relatorio;
 
 
-    public Persistencia_a06_Relatorio() {}
+    public Model_Relatorio_06() {}
 
 
-    public Persistencia_a06_Relatorio(int a06_id_relatorio, int a06_id_projeto, int a06_id_produto,
-                                      int a06_id_usuario, String a06_tipo_relatorio, Date a06_data_geracao,
-                                      String a06_texto_relatorio) {
+    public Model_Relatorio_06(int a06_id_relatorio, int a06_id_projeto, int a06_id_produto,
+                               int a06_id_usuario, String a06_tipo_relatorio, Date a06_data_geracao,
+                               String a06_texto_relatorio) {
         this.a06_id_relatorio = a06_id_relatorio;
         this.a06_id_projeto = a06_id_projeto;
         this.a06_id_produto = a06_id_produto;

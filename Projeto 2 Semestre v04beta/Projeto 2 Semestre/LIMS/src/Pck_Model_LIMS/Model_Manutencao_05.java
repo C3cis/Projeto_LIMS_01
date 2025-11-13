@@ -1,9 +1,9 @@
-package Pck_Persistencia_LIMS;
+package Pck_Model_LIMS;
 
 import java.util.Date;
 
 
-public class Persistencia_a05_Manutencao {
+public class Model_Manutencao_05 {
     private int a05_id_manutencao;
     private int a05_id_produto;
     private int a05_id_localizacao;
@@ -14,12 +14,12 @@ public class Persistencia_a05_Manutencao {
     private String a05_menu_relatorio;
 
 
-    public Persistencia_a05_Manutencao() {}
+    public Model_Manutencao_05() {}
 
 
-    public Persistencia_a05_Manutencao(int a05_id_manutencao, int a05_id_produto, int a05_id_localizacao,
-                                       int a05_id_usuario, Date a05_data_manutencao, String a05_tipo_manutencao,
-                                       String a05_descricao, String a05_menu_relatorio) {
+    public Model_Manutencao_05(int a05_id_manutencao, int a05_id_produto, int a05_id_localizacao,
+                                int a05_id_usuario, Date a05_data_manutencao, String a05_tipo_manutencao,
+                                String a05_descricao, String a05_menu_relatorio) {
         this.a05_id_manutencao = a05_id_manutencao;
         this.a05_id_produto = a05_id_produto;
         this.a05_id_localizacao = a05_id_localizacao;

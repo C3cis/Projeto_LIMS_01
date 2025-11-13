@@ -1,16 +1,16 @@
 package Pck_Model_LIMS;
 
-public class Model_a07_Localizacao {
+public class Model_Localizacao_07 {
     private int a07_id_localizacao;
     private int a07_id_usuario_responsavel;
     private String a07_identificacao;
     private String a07_setor;
 
 
-    public Model_a07_Localizacao() {}
+    public Model_Localizacao_07() {}
 
 
-    public Model_a07_Localizacao(int a07_id_localizacao, int a07_id_usuario_responsavel,
+    public Model_Localizacao_07(int a07_id_localizacao, int a07_id_usuario_responsavel,
                                  String a07_identificacao, String a07_setor) {
         this.a07_id_localizacao = a07_id_localizacao;
         this.a07_id_usuario_responsavel = a07_id_usuario_responsavel;

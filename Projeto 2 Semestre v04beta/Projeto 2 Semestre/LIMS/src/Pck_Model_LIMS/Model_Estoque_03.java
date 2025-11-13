@@ -1,9 +1,9 @@
-package Pck_Persistencia_LIMS;
+package Pck_Model_LIMS;
 
 import java.util.Date;
 
 
-public class Persistencia_a03_Estoque {
+public class Model_Estoque_03 {
     private int a03_id_estoque;
     private int a03_id_produto;
     private int a03_id_localizacao;
@@ -12,11 +12,11 @@ public class Persistencia_a03_Estoque {
     private String a03_lote;
 
 
-    public Persistencia_a03_Estoque() {}
+    public Model_Estoque_03() {}
 
 
-    public Persistencia_a03_Estoque(int a03_id_estoque, int a03_id_produto, int a03_id_localizacao,
-                                    int a03_quantidade, Date a03_data_chegada, String a03_lote) {
+    public Model_Estoque_03(int a03_id_estoque, int a03_id_produto, int a03_id_localizacao,
+                             int a03_quantidade, Date a03_data_chegada, String a03_lote) {
         this.a03_id_estoque = a03_id_estoque;
         this.a03_id_produto = a03_id_produto;
         this.a03_id_localizacao = a03_id_localizacao;

@@ -1,9 +1,9 @@
-package Pck_Persistencia_LIMS;
+package Pck_Model_LIMS;
 
 import java.util.Date;
 
 
-public class Persistencia_a04_Produto {
+public class Model_Produto_04 {
     private int a04_id_produto;
     private String a04_nome_produto;
     private String a04_descricao;
@@ -13,12 +13,12 @@ public class Persistencia_a04_Produto {
     private int a04_id_fornecedor;
 
 
-    public Persistencia_a04_Produto() {}
+    public Model_Produto_04() {}
 
 
-    public Persistencia_a04_Produto(int a04_id_produto, String a04_nome_produto, String a04_descricao,
-                                    String a04_finalidade, Date a04_data_registro, Date a04_data_recebimento,
-                                    int a04_id_fornecedor) {
+    public Model_Produto_04(int a04_id_produto, String a04_nome_produto, String a04_descricao,
+                             String a04_finalidade, Date a04_data_registro, Date a04_data_recebimento,
+                             int a04_id_fornecedor) {
         this.a04_id_produto = a04_id_produto;
         this.a04_nome_produto = a04_nome_produto;
         this.a04_descricao = a04_descricao;

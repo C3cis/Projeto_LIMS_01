@@ -1,6 +1,6 @@
 package Pck_Model_LIMS;
 
-public class Model_a11_Usuario {
+public class Model_Usuario_11 {
     private int a11_id_usuario;
     private String a11_nome;
     private String a11_email;
