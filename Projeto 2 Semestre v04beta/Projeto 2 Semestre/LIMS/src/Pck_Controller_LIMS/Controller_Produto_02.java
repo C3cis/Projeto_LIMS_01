@@ -1,9 +1,9 @@
-package Pck_Model_LIMS;
+package Pck_Controller_LIMS;
 
 import java.util.Date;
 
 
-public class Model_Produto_04 {
+public class Controller_Produto_02 {
     private int a04_id_produto;
     private String a04_nome_produto;
     private String a04_descricao;
@@ -13,12 +13,12 @@ public class Model_Produto_04 {
     private int a04_id_fornecedor;
 
 
-    public Model_Produto_04() {}
+    public Controller_Produto_02() {}
 
 
-    public Model_Produto_04(int a04_id_produto, String a04_nome_produto, String a04_descricao,
-                             String a04_finalidade, Date a04_data_registro, Date a04_data_recebimento,
-                             int a04_id_fornecedor) {
+    public Controller_Produto_02(int a04_id_produto, String a04_nome_produto, String a04_descricao,
+                                 String a04_finalidade, Date a04_data_registro, Date a04_data_recebimento,
+                                 int a04_id_fornecedor) {
         this.a04_id_produto = a04_id_produto;
         this.a04_nome_produto = a04_nome_produto;
         this.a04_descricao = a04_descricao;

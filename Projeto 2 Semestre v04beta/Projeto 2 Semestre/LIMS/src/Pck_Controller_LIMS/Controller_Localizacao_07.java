@@ -1,17 +1,17 @@
 package Pck_Controller_LIMS;
 
-public class Controller_a07_Localizacao {
+public class Controller_Localizacao_07 {
     private int a07_id_localizacao;
     private int a07_id_usuario_responsavel;
     private String a07_identificacao;
     private String a07_setor;
 
 
-    public Controller_a07_Localizacao() {}
+    public Controller_Localizacao_07() {}
 
 
-    public Controller_a07_Localizacao(int a07_id_localizacao, int a07_id_usuario_responsavel,
-                                      String a07_identificacao, String a07_setor) {
+    public Controller_Localizacao_07(int a07_id_localizacao, int a07_id_usuario_responsavel,
+                                     String a07_identificacao, String a07_setor) {
         this.a07_id_localizacao = a07_id_localizacao;
         this.a07_id_usuario_responsavel = a07_id_usuario_responsavel;
         this.a07_identificacao = a07_identificacao;

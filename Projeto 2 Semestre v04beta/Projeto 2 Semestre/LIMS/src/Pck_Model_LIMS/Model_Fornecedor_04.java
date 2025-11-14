@@ -1,6 +1,6 @@
-package Pck_Controller_LIMS;
+package Pck_Model_LIMS;
 
-public class Controller_a10_Fornecedor {
+public class Model_Fornecedor_04 {
     private int a10_id_fornecedor;
     private String a10_nome;
     private String a10_cnpj;
@@ -8,9 +8,9 @@ public class Controller_a10_Fornecedor {
     private String a10_email;
     private String a10_endereco;
 
-    public Controller_a10_Fornecedor() {}
+    public Model_Fornecedor_04() {}
 
-    public Controller_a10_Fornecedor(int a10_id_fornecedor, String a10_nome, String a10_cnpj, String a10_telefone, String a10_email, String a10_endereco) {
+    public Model_Fornecedor_04(int a10_id_fornecedor, String a10_nome, String a10_cnpj, String a10_telefone, String a10_email, String a10_endereco) {
         this.a10_id_fornecedor = a10_id_fornecedor;
         this.a10_nome = a10_nome;
         this.a10_cnpj = a10_cnpj;

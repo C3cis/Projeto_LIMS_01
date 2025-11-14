@@ -3,18 +3,18 @@ package Pck_Controller_LIMS;
 import java.util.Date;
 
 
-public class Controller_a08_Projeto_Produto {
+public class Controller_Projeto_Produto_10 {
     private int a08_id_produto;
     private int a08_id_projeto;
     private int a08_quantidade_usada;
     private Date a08_data_vinculo;
 
 
-    public Controller_a08_Projeto_Produto() {}
+    public Controller_Projeto_Produto_10() {}
 
 
-    public Controller_a08_Projeto_Produto(int a08_id_produto, int a08_id_projeto,
-                                          int a08_quantidade_usada, Date a08_data_vinculo) {
+    public Controller_Projeto_Produto_10(int a08_id_produto, int a08_id_projeto,
+                                         int a08_quantidade_usada, Date a08_data_vinculo) {
         this.a08_id_produto = a08_id_produto;
         this.a08_id_projeto = a08_id_projeto;
         this.a08_quantidade_usada = a08_quantidade_usada;

@@ -3,7 +3,7 @@ package Pck_Controller_LIMS;
 import java.util.Date;
 
 
-public class Controller_a01_Projeto {
+public class Controller__Projeto_01 {
     private int a01_id_projeto;
     private String a01_nome_projeto;
     private String a01_descricao;
@@ -14,10 +14,10 @@ public class Controller_a01_Projeto {
     private String a01_departamento;
 
 
-    public Controller_a01_Projeto() {}
+    public Controller__Projeto_01() {}
 
 
-    public Controller_a01_Projeto(int a01_id_projeto, String a01_nome_projeto, String a01_descricao,
+    public Controller__Projeto_01(int a01_id_projeto, String a01_nome_projeto, String a01_descricao,
                                   Date a01_data_inicio, Date a01_data_fim, double a01_estimativa,
                                   String a01_status_atividade, String a01_departamento) {
         this.a01_id_projeto = a01_id_projeto;

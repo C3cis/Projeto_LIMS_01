@@ -1,17 +1,17 @@
 package Pck_Model_LIMS;
 
-public class Model_Pedido_Projeto_09 {
+public class Model_Pedido_Produto_09 {
     private int a09_id_pedido;
     private int a09_id_projeto;
     private int a09_quantidade;
     private double a09_preco_unitario;
 
 
-    public Model_Pedido_Projeto_09() {}
+    public Model_Pedido_Produto_09() {}
 
 
-    public Model_Pedido_Projeto_09(int a09_id_pedido, int a09_id_projeto,
-                                    int a09_quantidade, double a09_preco_unitario) {
+    public Model_Pedido_Produto_09(int a09_id_pedido, int a09_id_projeto,
+                                   int a09_quantidade, double a09_preco_unitario) {
         this.a09_id_pedido = a09_id_pedido;
         this.a09_id_projeto = a09_id_projeto;
         this.a09_quantidade = a09_quantidade;

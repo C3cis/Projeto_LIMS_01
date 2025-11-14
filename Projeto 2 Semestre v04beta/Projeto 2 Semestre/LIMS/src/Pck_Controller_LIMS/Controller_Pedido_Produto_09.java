@@ -1,17 +1,17 @@
 package Pck_Controller_LIMS;
 
-public class Controller_a09_Pedido_Projeto {
+public class Controller_Pedido_Produto_09 {
     private int a09_id_pedido;
     private int a09_id_projeto;
     private int a09_quantidade;
     private double a09_preco_unitario;
 
 
-    public Controller_a09_Pedido_Projeto() {}
+    public Controller_Pedido_Produto_09() {}
 
 
-    public Controller_a09_Pedido_Projeto(int a09_id_pedido, int a09_id_projeto,
-                                         int a09_quantidade, double a09_preco_unitario) {
+    public Controller_Pedido_Produto_09(int a09_id_pedido, int a09_id_projeto,
+                                        int a09_quantidade, double a09_preco_unitario) {
         this.a09_id_pedido = a09_id_pedido;
         this.a09_id_projeto = a09_id_projeto;
         this.a09_quantidade = a09_quantidade;

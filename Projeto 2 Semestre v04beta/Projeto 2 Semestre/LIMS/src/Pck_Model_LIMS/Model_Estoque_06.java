@@ -3,7 +3,7 @@ package Pck_Model_LIMS;
 import java.util.Date;
 
 
-public class Model_Estoque_03 {
+public class Model_Estoque_06 {
     private int a03_id_estoque;
     private int a03_id_produto;
     private int a03_id_localizacao;
@@ -12,11 +12,11 @@ public class Model_Estoque_03 {
     private String a03_lote;
 
 
-    public Model_Estoque_03() {}
+    public Model_Estoque_06() {}
 
 
-    public Model_Estoque_03(int a03_id_estoque, int a03_id_produto, int a03_id_localizacao,
-                             int a03_quantidade, Date a03_data_chegada, String a03_lote) {
+    public Model_Estoque_06(int a03_id_estoque, int a03_id_produto, int a03_id_localizacao,
+                            int a03_quantidade, Date a03_data_chegada, String a03_lote) {
         this.a03_id_estoque = a03_id_estoque;
         this.a03_id_produto = a03_id_produto;
         this.a03_id_localizacao = a03_id_localizacao;

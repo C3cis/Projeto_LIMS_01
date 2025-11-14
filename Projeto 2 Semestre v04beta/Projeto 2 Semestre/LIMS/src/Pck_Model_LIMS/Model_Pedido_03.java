@@ -3,7 +3,7 @@ package Pck_Model_LIMS;
 import java.util.Date;
 
 
-public class Model_Pedidos_02 {
+public class Model_Pedido_03 {
     private int a02_id_pedido_externo;
     private int a02_id_usuario;
     private Date a02_data_pedido;
@@ -11,11 +11,11 @@ public class Model_Pedidos_02 {
     private String a02_observacoes;
 
 
-    public Model_Pedidos_02() {}
+    public Model_Pedido_03() {}
 
 
-    public Model_Pedidos_02(int a02_id_pedido_externo, int a02_id_usuario,
-                             Date a02_data_pedido, String a02_status_pedido, String a02_observacoes) {
+    public Model_Pedido_03(int a02_id_pedido_externo, int a02_id_usuario,
+                           Date a02_data_pedido, String a02_status_pedido, String a02_observacoes) {
         this.a02_id_pedido_externo = a02_id_pedido_externo;
         this.a02_id_usuario = a02_id_usuario;
         this.a02_data_pedido = a02_data_pedido;
