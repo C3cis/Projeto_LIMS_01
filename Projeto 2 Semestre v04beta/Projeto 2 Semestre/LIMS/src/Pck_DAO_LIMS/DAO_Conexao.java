@@ -30,13 +30,13 @@ public class DAO_Conexao {
             System.out.println("🎉 Teste de conexão bem-sucedido!");
             try {
                 conexao.close();
-                System.out.println("🔒 Conexão encerrada com sucesso.");
+                System.out.println("Conexão encerrada com sucesso.");
             } catch (SQLException e) {
-                System.out.println("⚠️ Erro ao fechar a conexão.");
+                System.out.println("Erro ao fechar a conexão.");
                 e.printStackTrace();
             }
         } else {
-            System.out.println("🚫 Falha ao conectar ao banco de dados.");
+            System.out.println("Falha ao conectar ao banco de dados.");
         }
     }
 }
