@@ -1,56 +1,31 @@
 package Pck_Controller_LIMS;
-
-import java.util.Date;
+import java.util.ArrayList;
+import Pck_Model_LIMS.Model_Manutencao_05;
+import Pck_Persistencia_LIMS.Persistencia_Manutencao_05;
 
 
 public class Controller_Manutencao_05 {
-    private int a05_id_manutencao;
-    private int a05_id_produto;
-    private int a05_id_localizacao;
-    private int a05_id_usuario;
-    private Date a05_data_manutencao;
-    private String a05_tipo_manutencao;
-    private String a05_descricao;
-    private String a05_menu_relatorio;
+    private Persistencia_Manutencao_05 persistencia = new Persistencia_Manutencao_05();
 
-
-    public Controller_Manutencao_05() {}
-
-
-    public Controller_Manutencao_05(int a05_id_manutencao, int a05_id_produto, int a05_id_localizacao,
-                                    int a05_id_usuario, Date a05_data_manutencao, String a05_tipo_manutencao,
-                                    String a05_descricao, String a05_menu_relatorio) {
-        this.a05_id_manutencao = a05_id_manutencao;
-        this.a05_id_produto = a05_id_produto;
-        this.a05_id_localizacao = a05_id_localizacao;
-        this.a05_id_usuario = a05_id_usuario;
-        this.a05_data_manutencao = a05_data_manutencao;
-        this.a05_tipo_manutencao = a05_tipo_manutencao;
-        this.a05_descricao = a05_descricao;
-        this.a05_menu_relatorio = a05_menu_relatorio;
+    public boolean inserir_manutencao(Model_Manutencao_05 m) {
+        return persistencia.inserir_manutencao(m);
     }
 
+    public boolean atualizar_manutencao(Model_Manutencao_05 m) {
+        return persistencia.atualizar_manutencao(m);
+    }
 
-    // SET
-    public void setA05_id_manutencao(int a05_id_manutencao) { this.a05_id_manutencao = a05_id_manutencao; }
-    public void setA05_id_produto(int a05_id_produto) { this.a05_id_produto = a05_id_produto; }
-    public void setA05_id_localizacao(int a05_id_localizacao) { this.a05_id_localizacao = a05_id_localizacao; }
-    public void setA05_id_usuario(int a05_id_usuario) { this.a05_id_usuario = a05_id_usuario; }
-    public void setA05_data_manutencao(Date a05_data_manutencao) { this.a05_data_manutencao = a05_data_manutencao; }
-    public void setA05_tipo_manutencao(String a05_tipo_manutencao) { this.a05_tipo_manutencao = a05_tipo_manutencao; }
-    public void setA05_descricao(String a05_descricao) { this.a05_descricao = a05_descricao; }
-    public void setA05_menu_relatorio(String a05_menu_relatorio) { this.a05_menu_relatorio = a05_menu_relatorio; }
+    public boolean deletar_manutencao(int id) {
+        return persistencia.deletar_manutencao(id);
+    }
 
+    public Model_Manutencao_05 buscar_manutencao(int id) {
+        return persistencia.buscar_manutencao(id);
+    }
 
-    // GET
-    public int getA05_id_manutencao() { return a05_id_manutencao; }
-    public int getA05_id_produto() { return a05_id_produto; }
-    public int getA05_id_localizacao() { return a05_id_localizacao; }
-    public int getA05_id_usuario() { return a05_id_usuario; }
-    public Date getA05_data_manutencao() { return a05_data_manutencao; }
-    public String getA05_tipo_manutencao() { return a05_tipo_manutencao; }
-    public String getA05_descricao() { return a05_descricao; }
-    public String getA05_menu_relatorio() { return a05_menu_relatorio; }
+    public ArrayList<Model_Manutencao_05> listar_manutencao() {
+        return persistencia.listar_manutencao();
+    }
 }
 
 

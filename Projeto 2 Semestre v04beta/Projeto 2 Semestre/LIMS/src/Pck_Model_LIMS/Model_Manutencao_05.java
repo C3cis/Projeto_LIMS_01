@@ -1,6 +1,6 @@
 package Pck_Model_LIMS;
 
-import java.util.Date;
+import java.sql.Date;
 
 public class Model_Manutencao_05 {
 
