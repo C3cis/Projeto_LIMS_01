@@ -1,6 +1,6 @@
 package Pck_Controller_LIMS;
 
-public class Controller_a11_Usuario {
+public class Controller_Usuario_11 {
     private int a11_id_usuario;
     private String a11_nome;
     private String a11_email;
@@ -9,11 +9,11 @@ public class Controller_a11_Usuario {
     private String a11_status_usuario;
 
 
-    public Controller_a11_Usuario() {}
+    public Controller_Usuario_11() {}
 
 
-    public Controller_a11_Usuario(int a11_id_usuario, String a11_nome, String a11_email,
-                                  String a11_titulo, String a11_senha, String a11_status_usuario) {
+    public Controller_Usuario_11(int a11_id_usuario, String a11_nome, String a11_email,
+                                 String a11_titulo, String a11_senha, String a11_status_usuario) {
         this.a11_id_usuario = a11_id_usuario;
         this.a11_nome = a11_nome;
         this.a11_email = a11_email;
