@@ -1,42 +1,62 @@
 package Pck_Model_LIMS;
 
-import java.util.Date;
-
+import java.sql.Date;
 
 public class Model_Pedido_03 {
-    private int a02_id_pedido_externo;
-    private int a02_id_usuario;
-    private Date a02_data_pedido;
-    private String a02_status_pedido;
-    private String a02_observacoes;
 
+    private int a03_id_pedido;
+    private Date a03_data_pedido;
+    private String a03_status_pedido;
+    private String a03_observacoes;
+    private int a03_id_usuario;
+    private int a03_id_fornecedor;
 
-    public Model_Pedido_03() {}
-
-
-    public Model_Pedido_03(int a02_id_pedido_externo, int a02_id_usuario,
-                           Date a02_data_pedido, String a02_status_pedido, String a02_observacoes) {
-        this.a02_id_pedido_externo = a02_id_pedido_externo;
-        this.a02_id_usuario = a02_id_usuario;
-        this.a02_data_pedido = a02_data_pedido;
-        this.a02_status_pedido = a02_status_pedido;
-        this.a02_observacoes = a02_observacoes;
+    // GETTERS e SETTERS (nomes exatamente conforme padrão)
+    public int getA03_id_pedido() {
+        return a03_id_pedido;
     }
 
+    public void setA03_id_pedido(int a03_id_pedido) {
+        this.a03_id_pedido = a03_id_pedido;
+    }
 
-    // SET
-    public void setA02_id_pedido_externo(int a02_id_pedido_externo) { this.a02_id_pedido_externo = a02_id_pedido_externo; }
-    public void setA02_id_usuario(int a02_id_usuario) { this.a02_id_usuario = a02_id_usuario; }
-    public void setA02_data_pedido(Date a02_data_pedido) { this.a02_data_pedido = a02_data_pedido; }
-    public void setA02_status_pedido(String a02_status_pedido) { this.a02_status_pedido = a02_status_pedido; }
-    public void setA02_observacoes(String a02_observacoes) { this.a02_observacoes = a02_observacoes; }
+    public Date getA03_data_pedido() {
+        return a03_data_pedido;
+    }
 
+    public void setA03_data_pedido(Date a03_data_pedido) {
+        this.a03_data_pedido = a03_data_pedido;
+    }
 
-    // GET
-    public int getA02_id_pedido_externo() { return a02_id_pedido_externo; }
-    public int getA02_id_usuario() { return a02_id_usuario; }
-    public Date getA02_data_pedido() { return a02_data_pedido; }
-    public String getA02_status_pedido() { return a02_status_pedido; }
-    public String getA02_observacoes() { return a02_observacoes; }
+    public String getA03_status_pedido() {
+        return a03_status_pedido;
+    }
+
+    public void setA03_status_pedido(String a03_status_pedido) {
+        this.a03_status_pedido = a03_status_pedido;
+    }
+
+    public String getA03_observacoes() {
+        return a03_observacoes;
+    }
+
+    public void setA03_observacoes(String a03_observacoes) {
+        this.a03_observacoes = a03_observacoes;
+    }
+
+    public int getA03_id_usuario() {
+        return a03_id_usuario;
+    }
+
+    public void setA03_id_usuario(int a03_id_usuario) {
+        this.a03_id_usuario = a03_id_usuario;
+    }
+
+    public int getA03_id_fornecedor() {
+        return a03_id_fornecedor;
+    }
+
+    public void setA03_id_fornecedor(int a03_id_fornecedor) {
+        this.a03_id_fornecedor = a03_id_fornecedor;
+    }
 }
-
