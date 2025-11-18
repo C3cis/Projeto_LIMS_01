@@ -1,39 +1,55 @@
 package Pck_Controller_LIMS;
+import Pck_Model_LIMS.Model_Fornecedor_04;
+import Pck_Persistencia_LIMS.Persistencia_Fornecedor_04;
+
+import java.util.ArrayList;
 
 public class Controller_Fornecedor_04 {
-    private int a10_id_fornecedor;
-    private String a10_nome;
-    private String a10_cnpj;
-    private String a10_telefone;
-    private String a10_email;
-    private String a10_endereco;
+    private Persistencia_Fornecedor_04 persistencia;
 
-    public Controller_Fornecedor_04() {}
-
-    public Controller_Fornecedor_04(int a10_id_fornecedor, String a10_nome, String a10_cnpj, String a10_telefone, String a10_email, String a10_endereco) {
-        this.a10_id_fornecedor = a10_id_fornecedor;
-        this.a10_nome = a10_nome;
-        this.a10_cnpj = a10_cnpj;
-        this.a10_telefone = a10_telefone;
-        this.a10_email = a10_email;
-        this.a10_endereco = a10_endereco;
+    public Controller_Fornecedor_04() {
+        persistencia = new Persistencia_Fornecedor_04();
     }
 
-    // SET
-    public void setA10_id_fornecedor(int a10_id_fornecedor) { this.a10_id_fornecedor = a10_id_fornecedor; }
-    public void setA10_nome(String a10_nome) { this.a10_nome = a10_nome; }
-    public void setA10_cnpj(String a10_cnpj) { this.a10_cnpj = a10_cnpj; }
-    public void setA10_telefone(String a10_telefone) { this.a10_telefone = a10_telefone; }
-    public void setA10_email(String a10_email) { this.a10_email = a10_email; }
-    public void setA10_endereco(String a10_endereco) { this.a10_endereco = a10_endereco; }
+    // ------------------ SALVAR ------------------
+    public boolean salvarFornecedor(String nome, String cnpj, String telefone, String email, String endereco) {
+        Model_Fornecedor_04 f = new Model_Fornecedor_04();
 
+        f.setA04_nome_fornecedor(nome);
+        f.setA04_cnpj_fornecedor(cnpj);
+        f.setA04_telefone_fornecedor(telefone);
+        f.setA04_email_fornecedor(email);
+        f.setA04_endereco_fornecedor(endereco);
 
-    // GET
-    public int getA10_id_fornecedor() { return a10_id_fornecedor; }
-    public String getA10_nome() { return a10_nome; }
-    public String getA10_cnpj() { return a10_cnpj; }
-    public String getA10_telefone() { return a10_telefone; }
-    public String getA10_email() { return a10_email; }
-    public String getA10_endereco() { return a10_endereco; }
+        return persistencia.inserir_fornecedor(f);
+    }
+
+    // ------------------ EDITAR ------------------
+    public boolean editarFornecedor(int id, String nome, String cnpj, String telefone, String email, String endereco) {
+        Model_Fornecedor_04 f = new Model_Fornecedor_04();
+
+        f.setA04_id_fornecedor(id);
+        f.setA04_nome_fornecedor(nome);
+        f.setA04_cnpj_fornecedor(cnpj);
+        f.setA04_telefone_fornecedor(telefone);
+        f.setA04_email_fornecedor(email);
+        f.setA04_endereco_fornecedor(endereco);
+
+        return persistencia.atualizar_fornecedor(f);
+    }
+
+    // ------------------ BUSCAR ------------------
+    public Model_Fornecedor_04 buscarFornecedor(int id) {
+        return persistencia.buscar_fornecedor(id);
+    }
+
+    // ------------------ LISTAR ------------------
+    public ArrayList<Model_Fornecedor_04> listarFornecedores() {
+        return persistencia.listar_fornecedor();
+    }
+
+    // ------------------ EXCLUIR ------------------
+    public boolean excluirFornecedor(int id) {
+        return persistencia.deletar_fornecedor(id);
+    }
 }
-
