@@ -19,6 +19,10 @@ public class Relatorios extends JDialog {
     private JButton sairButton;
 
     private JTable table1;
+    private JComboBox comboBox1;
+    private JComboBox comboBox2;
+    private JEditorPane editorPane1;
+    private JEditorPane editorPane2;
 
     private JTextField textFieldID;
     private JTextField textFieldTitulo;
