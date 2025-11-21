@@ -14,6 +14,8 @@ public class Principal extends JDialog {
     private JButton pedidosButton;
     private JButton relatoriosButton;
     private JButton vizualizarDadosButton;
+    private JButton manutençãoButton;
+    private JButton estoqueButton;
 
     public Principal() {
         setContentPane(contentPane);

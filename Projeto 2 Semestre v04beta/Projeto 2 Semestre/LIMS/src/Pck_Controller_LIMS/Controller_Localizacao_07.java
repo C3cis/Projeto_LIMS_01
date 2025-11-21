@@ -1,36 +1,65 @@
 package Pck_Controller_LIMS;
 
+
+
+import Pck_Model_LIMS.Model_Localizacao_07;
+import Pck_Persistencia_LIMS.Persistencia_Localizacao_07;
+
+import java.util.List;
+
+/**
+ * Controller alinhado aos nomes e métodos da Persistencia_Localizacao_07
+ */
 public class Controller_Localizacao_07 {
-    private int a07_id_localizacao;
-    private int a07_id_usuario_responsavel;
-    private String a07_identificacao;
-    private String a07_setor;
 
+    private Persistencia_Localizacao_07 persistencia;
 
-    public Controller_Localizacao_07() {}
-
-
-    public Controller_Localizacao_07(int a07_id_localizacao, int a07_id_usuario_responsavel,
-                                     String a07_identificacao, String a07_setor) {
-        this.a07_id_localizacao = a07_id_localizacao;
-        this.a07_id_usuario_responsavel = a07_id_usuario_responsavel;
-        this.a07_identificacao = a07_identificacao;
-        this.a07_setor = a07_setor;
+    public Controller_Localizacao_07() {
+        this.persistencia = new Persistencia_Localizacao_07();
     }
 
+    public boolean inserir(Model_Localizacao_07 m) {
+        try {
+            return persistencia.inserirLocalizacao(m);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 
-    // SET
-    public void setA07_id_localizacao(int a07_id_localizacao) { this.a07_id_localizacao = a07_id_localizacao; }
-    public void setA07_id_usuario_responsavel(int a07_id_usuario_responsavel) { this.a07_id_usuario_responsavel = a07_id_usuario_responsavel; }
-    public void setA07_identificacao(String a07_identificacao) { this.a07_identificacao = a07_identificacao; }
-    public void setA07_setor(String a07_setor) { this.a07_setor = a07_setor; }
+    public boolean atualizar(Model_Localizacao_07 m) {
+        try {
+            return persistencia.atualizarLocalizacao(m);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 
+    public boolean excluir(int id) {
+        try {
+            return persistencia.excluirLocalizacao(id);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 
-    // GET
-    public int getA07_id_localizacao() { return a07_id_localizacao; }
-    public int getA07_id_usuario_responsavel() { return a07_id_usuario_responsavel; }
-    public String getA07_identificacao() { return a07_identificacao; }
-    public String getA07_setor() { return a07_setor; }
+    public Model_Localizacao_07 buscar(int id) {
+        try {
+            return persistencia.buscarLocalizacao(id);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public List<Model_Localizacao_07> listar() {
+        try {
+            return persistencia.listarLocalizacoes();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return java.util.Collections.emptyList();
+        }
+    }
 }
-
-
