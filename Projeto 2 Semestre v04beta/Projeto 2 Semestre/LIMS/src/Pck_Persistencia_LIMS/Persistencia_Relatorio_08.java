@@ -6,30 +6,26 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class Persistencia_Relatorio_08 {
 
     private Connection conn;
 
     public Persistencia_Relatorio_08() {
         try {
-            conn = DAO_Conexao.connect(); // <- CORRETO
+            conn = DAO_Conexao.connect();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    // ------------------------------------------------------
     // INSERT
-    // ------------------------------------------------------
-    public boolean inserirRelatorio(Model_Relatorio_08 m) {
+    public boolean inserir(Model_Relatorio_08 m) {
         try {
-            CallableStatement cs = conn.prepareCall("{CALL SP_INSERIR_RELATORIO_08(?,?,?,?,?)}");
+            CallableStatement cs = conn.prepareCall("{CALL SP_INSERIR_RELATORIO_08(?,?,?,?)}");
             cs.setString(1, m.getA08_titulo());
             cs.setString(2, m.getA08_data_geracao());
             cs.setString(3, m.getA08_conteudo());
             cs.setInt(4, m.getA08_id_usuario());
-            cs.setInt(5, m.getA08_id_projeto());
             cs.execute();
             return true;
 
@@ -39,18 +35,15 @@ public class Persistencia_Relatorio_08 {
         }
     }
 
-    // ------------------------------------------------------
     // UPDATE
-    // ------------------------------------------------------
-    public boolean atualizarRelatorio(Model_Relatorio_08 m) {
+    public boolean atualizar(Model_Relatorio_08 m) {
         try {
-            CallableStatement cs = conn.prepareCall("{CALL SP_ATUALIZAR_RELATORIO_08(?,?,?,?,?,?)}");
+            CallableStatement cs = conn.prepareCall("{CALL SP_ATUALIZAR_RELATORIO_08(?,?,?,?,?)}");
             cs.setInt(1, m.getA08_id_relatorio());
             cs.setString(2, m.getA08_titulo());
             cs.setString(3, m.getA08_data_geracao());
             cs.setString(4, m.getA08_conteudo());
             cs.setInt(5, m.getA08_id_usuario());
-            cs.setInt(6, m.getA08_id_projeto());
             cs.execute();
             return true;
 
@@ -60,10 +53,8 @@ public class Persistencia_Relatorio_08 {
         }
     }
 
-    // ------------------------------------------------------
     // DELETE
-    // ------------------------------------------------------
-    public boolean excluirRelatorio(int id) {
+    public boolean excluir(int id) {
         try {
             CallableStatement cs = conn.prepareCall("{CALL SP_EXCLUIR_RELATORIO_08(?)}");
             cs.setInt(1, id);
@@ -76,10 +67,8 @@ public class Persistencia_Relatorio_08 {
         }
     }
 
-    // ------------------------------------------------------
-    // BUSCAR
-    // ------------------------------------------------------
-    public Model_Relatorio_08 buscarRelatorio(int id) {
+    // BUSCAR POR ID
+    public Model_Relatorio_08 buscar(int id) {
         try {
             CallableStatement cs = conn.prepareCall("{CALL SP_BUSCAR_RELATORIO_08(?)}");
             cs.setInt(1, id);
@@ -92,9 +81,9 @@ public class Persistencia_Relatorio_08 {
                 m.setA08_data_geracao(rs.getString("A08_DATA_GERACAO"));
                 m.setA08_conteudo(rs.getString("A08_CONTEUDO"));
                 m.setA08_id_usuario(rs.getInt("A08_ID_USUARIO"));
-                m.setA08_id_projeto(rs.getInt("A08_ID_PROJETO"));
                 return m;
             }
+
             return null;
 
         } catch (Exception e) {
@@ -103,10 +92,8 @@ public class Persistencia_Relatorio_08 {
         }
     }
 
-    // ------------------------------------------------------
-    // LISTAR
-    // ------------------------------------------------------
-    public List<Model_Relatorio_08> listarRelatorios() {
+    // LISTAR TODOS
+    public List<Model_Relatorio_08> listar() {
         List<Model_Relatorio_08> lista = new ArrayList<>();
 
         try {
@@ -120,7 +107,6 @@ public class Persistencia_Relatorio_08 {
                 m.setA08_data_geracao(rs.getString("A08_DATA_GERACAO"));
                 m.setA08_conteudo(rs.getString("A08_CONTEUDO"));
                 m.setA08_id_usuario(rs.getInt("A08_ID_USUARIO"));
-                m.setA08_id_projeto(rs.getInt("A08_ID_PROJETO"));
                 lista.add(m);
             }
 
@@ -131,4 +117,3 @@ public class Persistencia_Relatorio_08 {
         return lista;
     }
 }
-

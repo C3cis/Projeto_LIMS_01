@@ -1,52 +1,35 @@
 package Pck_Controller_LIMS;
 
-import java.util.Date;
+import Pck_Model_LIMS.Model_Relatorio_08;
+import Pck_Persistencia_LIMS.Persistencia_Relatorio_08;
 
+import java.util.List;
 
 public class Controller_Relatorio_08 {
-    private int a06_id_relatorio;
-    private int a06_id_projeto;
-    private int a06_id_produto;
-    private int a06_id_usuario;
-    private String a06_tipo_relatorio;
-    private Date a06_data_geracao;
-    private String a06_texto_relatorio;
 
+    private Persistencia_Relatorio_08 persistencia;
 
-    public Controller_Relatorio_08() {}
-
-
-    public Controller_Relatorio_08(int a06_id_relatorio, int a06_id_projeto, int a06_id_produto,
-                                   int a06_id_usuario, String a06_tipo_relatorio, Date a06_data_geracao,
-                                   String a06_texto_relatorio) {
-        this.a06_id_relatorio = a06_id_relatorio;
-        this.a06_id_projeto = a06_id_projeto;
-        this.a06_id_produto = a06_id_produto;
-        this.a06_id_usuario = a06_id_usuario;
-        this.a06_tipo_relatorio = a06_tipo_relatorio;
-        this.a06_data_geracao = a06_data_geracao;
-        this.a06_texto_relatorio = a06_texto_relatorio;
+    public Controller_Relatorio_08() {
+        persistencia = new Persistencia_Relatorio_08();
     }
 
+    public boolean inserir(Model_Relatorio_08 m) throws Exception {
+        return persistencia.inserir(m);
+    }
 
-    // SET
-    public void setA06_id_relatorio(int a06_id_relatorio) { this.a06_id_relatorio = a06_id_relatorio; }
-    public void setA06_id_projeto(int a06_id_projeto) { this.a06_id_projeto = a06_id_projeto; }
-    public void setA06_id_produto(int a06_id_produto) { this.a06_id_produto = a06_id_produto; }
-    public void setA06_id_usuario(int a06_id_usuario) { this.a06_id_usuario = a06_id_usuario; }
-    public void setA06_tipo_relatorio(String a06_tipo_relatorio) { this.a06_tipo_relatorio = a06_tipo_relatorio; }
-    public void setA06_data_geracao(Date a06_data_geracao) { this.a06_data_geracao = a06_data_geracao; }
-    public void setA06_texto_relatorio(String a06_texto_relatorio) { this.a06_texto_relatorio = a06_texto_relatorio; }
+    public boolean atualizar(Model_Relatorio_08 m) throws Exception {
+        return persistencia.atualizar(m);
+    }
 
+    public boolean excluir(int id) throws Exception {
+        return persistencia.excluir(id);
+    }
 
-    // GET
-    public int getA06_id_relatorio() { return a06_id_relatorio; }
-    public int getA06_id_projeto() { return a06_id_projeto; }
-    public int getA06_id_produto() { return a06_id_produto; }
-    public int getA06_id_usuario() { return a06_id_usuario; }
-    public String getA06_tipo_relatorio() { return a06_tipo_relatorio; }
-    public Date getA06_data_geracao() { return a06_data_geracao; }
-    public String getA06_texto_relatorio() { return a06_texto_relatorio; }
+    public Model_Relatorio_08 buscar(int id) throws Exception {
+        return persistencia.buscar(id);
+    }
+
+    public List<Model_Relatorio_08> listar() throws Exception {
+        return persistencia.listar();
+    }
 }
-
-
