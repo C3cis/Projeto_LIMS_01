@@ -9,16 +9,16 @@ import java.awt.event.*;
 public class Principal extends JDialog {
 
     private JPanel contentPane;
-    private JButton btnDeslogar;
-    private JButton btnCadastro;
-    private JButton btnProdutos;
-    private JButton btnFornecedores;
-    private JButton btnProjetos;
-    private JButton btnPedidos;
-    private JButton btnRelatorios;
-    private JButton btnVisualizar;
-    private JButton btnManutencao;
-    private JButton btnEstoque;
+    private JButton deslogarButton;
+    private JButton cadastroButton;
+    private JButton produtosButton;
+    private JButton fornecedoresButton;
+    private JButton projetosButton;
+    private JButton pedidosButton;
+    private JButton relatoriosButton;
+    private JButton vizualizarDadosButton;
+    private JButton manutençãoButton;
+    private JButton estoqueButton;
 
     private Model_Usuario_11 usuarioLogado;
 
@@ -31,14 +31,17 @@ public class Principal extends JDialog {
 
         aplicarPermissoes();
 
-        btnDeslogar.addActionListener(e -> dispose());
-        btnCadastro.addActionListener(e -> abrirTela(new Cadastro()));
-        btnProjetos.addActionListener(e -> abrirTela(new Projetos()));
-        btnProdutos.addActionListener(e -> abrirTela(new Produtos()));
-        btnPedidos.addActionListener(e -> abrirTela(new Pedidos()));
-        btnRelatorios.addActionListener(e -> abrirTela(new Relatorios()));
-        btnFornecedores.addActionListener(e -> abrirTela(new Fornecedores()));
-        btnVisualizar.addActionListener(e -> abrirTela(new VisualizarDados()));
+        deslogarButton.addActionListener(e -> dispose());
+        cadastroButton.addActionListener(e -> abrirTela(new Cadastro()));
+        projetosButton.addActionListener(e -> abrirTela(new Projetos()));
+        produtosButton.addActionListener(e -> abrirTela(new Produtos()));
+        pedidosButton.addActionListener(e -> abrirTela(new Pedidos()));
+        relatoriosButton.addActionListener(e -> abrirTela(new Relatorios()));
+        fornecedoresButton.addActionListener(e -> abrirTela(new Fornecedores()));
+        vizualizarDadosButton.addActionListener(e -> abrirTela(new VisualizarDados()));
+        manutençãoButton.addActionListener(e -> abrirTela(new Manutencao()));
+        estoqueButton.addActionListener(e -> abrirTela(new Estoque()));
+
 
         contentPane.registerKeyboardAction(e -> dispose(),
                 KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
@@ -53,11 +56,15 @@ public class Principal extends JDialog {
 
         if (!cargo.equalsIgnoreCase("Administrador")) {
             // Ocultar funções de ADM
-            btnCadastro.setVisible(false);
-            btnRelatorios.setVisible(false);
-            btnFornecedores.setVisible(false);
-            btnProjetos.setVisible(false);
-            btnManutencao.setVisible(false);
+            cadastroButton.setVisible(false);
+            relatoriosButton.setVisible(false);
+            fornecedoresButton.setVisible(false);
+            projetosButton.setVisible(false);
+            manutençãoButton.setVisible(false);
+            produtosButton.setVisible(false);
+            pedidosButton.setVisible(false);
+            estoqueButton.setVisible(false);
+
         }
     }
 

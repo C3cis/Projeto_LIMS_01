@@ -27,7 +27,7 @@ public class DAO_Conexao {
     public static void main(String[] args) {
         Connection conexao = connect();
         if (conexao != null) {
-            System.out.println("🎉 Teste de conexão bem-sucedido!");
+            System.out.println(" Teste de conexão bem-sucedido!");
             try {
                 conexao.close();
                 System.out.println("Conexão encerrada com sucesso.");

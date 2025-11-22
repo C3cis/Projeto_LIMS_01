@@ -1,4 +1,5 @@
 package Pck_View_LIMS;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -9,20 +10,20 @@ import Pck_Model_LIMS.Model_Usuario_11;
 public class Login extends JDialog {
 
     private JPanel contentPane;
-    private JButton entrarButton;
     private JButton sairButton;
-    private JTextField txtEmail;
-    private JPasswordField txtSenha;
-    private JButton btnEntrar;
-    private JButton btnSair;
+    private JTextField caTextField;
+    private JPasswordField passwordField;
+    private JButton sairButton1;
+    private JButton entrarButton1;
+
 
     public Login() {
         setContentPane(contentPane);
         setModal(true);
         setTitle("Login - LIMS");
 
-        btnEntrar.addActionListener(e -> realizarLogin());
-        btnSair.addActionListener(e -> dispose());
+        entrarButton1.addActionListener(e -> realizarLogin());
+        sairButton1.addActionListener(e -> dispose());
 
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         addWindowListener(new WindowAdapter() {
@@ -41,11 +42,11 @@ public class Login extends JDialog {
     // =====================================================
     private void realizarLogin() {
 
-        String email = txtEmail.getText().trim();
-        String senha = new String(txtSenha.getPassword());
+        String email = caTextField.getText().trim();
+        String senha = new String(passwordField.getPassword());
 
         if (email.isEmpty() || senha.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Informe E-mail e Senha.");
+            JOptionPane.showMessageDialog(this, "Informe Email e Senha.");
             return;
         }
 

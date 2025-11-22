@@ -1,7 +1,7 @@
 package Pck_Persistencia_LIMS;
+
 import Pck_DAO_LIMS.DAO_Conexao;
 import Pck_Model_LIMS.Model_Usuario_11;
-
 import java.sql.*;
 import java.util.ArrayList;
 
@@ -11,11 +11,29 @@ public class Persistencia_Usuario_11 {
     private CallableStatement preparedState;
 
     // ============================================================
+    // ABRIR CONEXÃO
+    // ============================================================
+    private void abrir() throws SQLException {
+        conec = DAO_Conexao.connect();
+        if (conec == null) {
+            throw new SQLException("Falha ao conectar: conec == null.");
+        }
+    }
+
+    // ============================================================
+    // FECHAR CONEXÃO
+    // ============================================================
+    private void fechar() {
+        try { if (preparedState != null) preparedState.close(); } catch (Exception ignored) {}
+        try { if (conec != null) conec.close(); } catch (Exception ignored) {}
+    }
+
+    // ============================================================
     // INSERIR
     // ============================================================
     public boolean inserir(Model_Usuario_11 u) {
         try {
-            conec = DAO_Conexao.connect();
+            abrir();
             preparedState = conec.prepareCall("{CALL SP_INSERIR_USUARIO_11(?,?,?,?,?,?)}");
 
             preparedState.setString(1, u.getA11_nome());
@@ -42,7 +60,7 @@ public class Persistencia_Usuario_11 {
     // ============================================================
     public boolean atualizar(Model_Usuario_11 u) {
         try {
-            conec = DAO_Conexao.connect();
+            abrir();
             preparedState = conec.prepareCall("{CALL SP_ATUALIZAR_USUARIO_11(?,?,?,?,?,?)}");
 
             preparedState.setInt(1, u.getA11_id_usuario());
@@ -69,10 +87,10 @@ public class Persistencia_Usuario_11 {
     // ============================================================
     public boolean excluir(int id) {
         try {
-            conec = DAO_Conexao.connect();
+            abrir();
             preparedState = conec.prepareCall("{CALL SP_EXCLUIR_USUARIO_11(?)}");
-
             preparedState.setInt(1, id);
+
             preparedState.execute();
             return true;
 
@@ -86,14 +104,15 @@ public class Persistencia_Usuario_11 {
     }
 
     // ============================================================
-    // BUSCAR POR ID
+    // BUSCAR
     // ============================================================
     public Model_Usuario_11 buscar(int id) {
+
         ResultSet rs = null;
         Model_Usuario_11 u = null;
 
         try {
-            conec = DAO_Conexao.connect();
+            abrir();
             preparedState = conec.prepareCall("{CALL SP_BUSCAR_USUARIO_11(?)}");
             preparedState.setInt(1, id);
 
@@ -125,12 +144,14 @@ public class Persistencia_Usuario_11 {
     // LISTAR
     // ============================================================
     public ArrayList<Model_Usuario_11> listar() {
+
         ArrayList<Model_Usuario_11> lista = new ArrayList<>();
         ResultSet rs = null;
 
         try {
-            conec = DAO_Conexao.connect();
+            abrir();
             preparedState = conec.prepareCall("{CALL SP_LISTAR_USUARIO_11()}");
+
             rs = preparedState.executeQuery();
 
             while (rs.next()) {
@@ -142,6 +163,7 @@ public class Persistencia_Usuario_11 {
                 u.setA11_senha(rs.getString("A11_SENHA"));
                 u.setA11_status_usuario(rs.getString("A11_STATUS_USUARIO"));
                 u.setA11_codigo_usuario(rs.getString("A11_CODIGO_USUARIO"));
+
                 lista.add(u);
             }
 
@@ -160,13 +182,15 @@ public class Persistencia_Usuario_11 {
     // LOGIN
     // ============================================================
     public Model_Usuario_11 login(String email, String senha) {
+
         ResultSet rs = null;
         Model_Usuario_11 u = null;
 
         try {
-            conec = DAO_Conexao.connect();
+            abrir();
             preparedState = conec.prepareCall(
-                    "SELECT * FROM USUARIO_11 WHERE A11_EMAIL = ? AND A11_SENHA = ?");
+                    "SELECT * FROM USUARIO_11 WHERE A11_EMAIL = ? AND A11_SENHA = ?"
+            );
 
             preparedState.setString(1, email);
             preparedState.setString(2, senha);
@@ -193,14 +217,5 @@ public class Persistencia_Usuario_11 {
 
         return u;
     }
-
-    // ============================================================
-    // FECHAR CONEXÃO
-    // ============================================================
-    private void fechar() {
-        try { if (preparedState != null) preparedState.close(); } catch (Exception ignored) {}
-        try { if (conec != null) conec.close(); } catch (Exception ignored) {}
-    }
-
 }
 

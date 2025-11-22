@@ -17,26 +17,28 @@ public class Projetos extends JDialog {
     // Campos de texto
     private JTextField txtNomeProjeto;       // textField2
     private JTextField txtDepartamento;      // textField5
-    private JTextField txtDataInicial;       // textField1
+    private JTextField textField1dataIni;       // textField1
     private JTextField txtDataFinal;         // textField3
     private JTextField txtOrcamento;         // textField6
 
     // Área de texto
-    private JEditorPane txtDescricao;        // editorPane1
-
+    private JLabel txtDescricao;
+    private JLabel JlabelDataInicial; //editorPane1
+    private JEditorPane editorPane1Descri;
+    private JLabel nomeLabel;
     // Combobox
     private JComboBox<String> cmbStatus;     // comboBox1
     private JComboBox<String> cmbUsuario;    // comboBox2
 
     // Botões
-    private JButton btnSalvar;               // salvarButton
-    private JButton btnEditar;               // editarButton
-    private JButton btnExcluir;              // excluirButton
-    private JButton btnBuscar;               // buscarButton
-    private JButton btnSair;                 // sairButton
+    private JButton salvarButton;               // salvarButton
+    private JButton editarButton;               // editarButton
+    private JButton excluirButton;              // excluirButton
+    private JButton buscarButton;               // buscarButton
+    private JButton sairButton;                 // sairButton
 
     // Tabela
-    private JTable tblProjetos;              // table1
+    private JTable table1geral;              // table1
     private DefaultTableModel tableModel;
 
     public Projetos() {
@@ -49,11 +51,11 @@ public class Projetos extends JDialog {
         carregarUsuarios();
         preencherTabela();
 
-        btnSalvar.addActionListener(e -> salvarProjeto());
-        btnEditar.addActionListener(e -> editarProjeto());
-        btnExcluir.addActionListener(e -> excluirProjeto());
-        btnBuscar.addActionListener(e -> buscarProjeto());
-        btnSair.addActionListener(e -> dispose());
+        salvarButton.addActionListener(e -> salvarProjeto());
+        editarButton.addActionListener(e -> editarProjeto());
+        excluirButton.addActionListener(e -> excluirProjeto());
+        buscarButton.addActionListener(e -> buscarProjeto());
+        sairButton.addActionListener(e -> dispose());
     }
 
     // ===========================================================
@@ -96,8 +98,8 @@ public class Projetos extends JDialog {
                 0
         );
 
-        tblProjetos.setModel(tableModel);
-        tblProjetos.setDefaultEditor(Object.class, null); // tabela somente leitura
+        table1geral.setModel(tableModel);
+        table1geral.setDefaultEditor(Object.class, null); // tabela somente leitura
     }
 
     // ===========================================================
@@ -153,7 +155,7 @@ public class Projetos extends JDialog {
     // EDITAR
     // ===========================================================
     private void editarProjeto() {
-        int row = tblProjetos.getSelectedRow();
+        int row = table1geral.getSelectedRow();
         if (row < 0) {
             JOptionPane.showMessageDialog(null, "Selecione um projeto para editar.");
             return;
@@ -195,7 +197,7 @@ public class Projetos extends JDialog {
     // EXCLUIR
     // ===========================================================
     private void excluirProjeto() {
-        int row = tblProjetos.getSelectedRow();
+        int row = table1geral.getSelectedRow();
         if (row < 0) {
             JOptionPane.showMessageDialog(null, "Selecione um projeto para excluir.");
             return;
@@ -251,7 +253,7 @@ public class Projetos extends JDialog {
         m.setA01_nome_projeto(txtNomeProjeto.getText().trim());
         m.setA01_descricao(txtDescricao.getText());
 
-        m.setA01_data_inicial(java.sql.Date.valueOf(txtDataInicial.getText().trim()));
+        m.setA01_data_inicial(java.sql.Date.valueOf(textField1dataIni.getText().trim()));
 
         String dataF = txtDataFinal.getText().trim();
         m.setA01_data_final(dataF.isEmpty() ? null : java.sql.Date.valueOf(dataF));
@@ -269,7 +271,7 @@ public class Projetos extends JDialog {
     private void preencherFormulario(Model_Projeto_01 m) {
         txtNomeProjeto.setText(m.getA01_nome_projeto());
         txtDescricao.setText(m.getA01_descricao());
-        txtDataInicial.setText(m.getA01_data_inicial() != null ? m.getA01_data_inicial().toString() : "");
+        textField1dataIni.setText(m.getA01_data_inicial() != null ? m.getA01_data_inicial().toString() : "");
         txtDataFinal.setText(m.getA01_data_final() != null ? m.getA01_data_final().toString() : "");
         txtOrcamento.setText(String.valueOf(m.getA01_orcamento()));
         txtDepartamento.setText(m.getA01_departamento());
@@ -286,7 +288,7 @@ public class Projetos extends JDialog {
     private void limparCampos() {
         txtNomeProjeto.setText("");
         txtDescricao.setText("");
-        txtDataInicial.setText("");
+        textField1dataIni.setText("");
         txtDataFinal.setText("");
         txtOrcamento.setText("");
         txtDepartamento.setText("");
