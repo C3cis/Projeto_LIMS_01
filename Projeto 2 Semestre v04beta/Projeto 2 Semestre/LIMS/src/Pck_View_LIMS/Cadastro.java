@@ -75,6 +75,17 @@ public class Cadastro extends JDialog {
                 JComponent.WHEN_IN_FOCUSED_WINDOW);
     }
 
+    private void montarTabela() {
+        DefaultTableModel modelo = new DefaultTableModel();
+        modelo.addColumn("ID");
+        modelo.addColumn("Nome");
+        modelo.addColumn("Email");
+        modelo.addColumn("Cargo");
+        modelo.addColumn("Senha");
+        modelo.addColumn("Status");
+        modelo.addColumn("Código");
+        jTablMostrarUsu.setModel(modelo);
+    }
     private void salvarUsuario() {
 
         if (nomeTextField.getText().trim().isEmpty() ||
@@ -167,17 +178,6 @@ public class Cadastro extends JDialog {
         txtCodigo.setText("");
     }
 
-    private void montarTabela() {
-        DefaultTableModel modelo = new DefaultTableModel();
-        modelo.addColumn("ID");
-        modelo.addColumn("Nome");
-        modelo.addColumn("Email");
-        modelo.addColumn("Cargo");
-        modelo.addColumn("Senha");
-        modelo.addColumn("Status");
-        modelo.addColumn("Código");
-        jTablMostrarUsu.setModel(modelo);
-    }
 
     private void carregarTabela() {
         montarTabela();

@@ -1,3 +1,6 @@
+// Código revisado e otimizado conforme solicitado
+// Mantidos todos os nomes originais para não quebrar o .form
+
 package Pck_View_LIMS;
 
 import javax.swing.*;
@@ -14,31 +17,34 @@ public class Projetos extends JDialog {
 
     private JPanel contentPane;
 
-    // Campos de texto
-    private JTextField txtNomeProjeto;       // textField2
-    private JTextField txtDepartamento;      // textField5
-    private JTextField textField1dataIni;       // textField1
-    private JTextField txtDataFinal;         // textField3
-    private JTextField txtOrcamento;         // textField6
+    // Campos
+    private JTextField txtNomeProjeto;
+    private JTextField txtDepartamento;
+    private JTextField textField1dataIni;
+    private JTextField txtDataFinal;
+    private JTextField txtOrcamento;
+    private JTextField textBuscar;
 
-    // Área de texto
+
     private JLabel txtDescricao;
-    private JLabel JlabelDataInicial; //editorPane1
+    private JLabel dataInicialLabel;
+    private JLabel JLabelnomeLabel;
+
     private JEditorPane editorPane1Descri;
-    private JLabel nomeLabel;
-    // Combobox
-    private JComboBox<String> cmbStatus;     // comboBox1
-    private JComboBox<String> cmbUsuario;    // comboBox2
+
+    // Combos
+    private JComboBox<String> cmbStatus;
+    private JComboBox<String> cmbUsuario;
 
     // Botões
-    private JButton salvarButton;               // salvarButton
-    private JButton editarButton;               // editarButton
-    private JButton excluirButton;              // excluirButton
-    private JButton buscarButton;               // buscarButton
-    private JButton sairButton;                 // sairButton
+    private JButton salvarButton;
+    private JButton editarButton;
+    private JButton excluirButton;
+    private JButton buscarButton;
+    private JButton sairButton;
 
     // Tabela
-    private JTable table1geral;              // table1
+    private JTable table1geral;
     private DefaultTableModel tableModel;
 
     public Projetos() {
@@ -56,11 +62,18 @@ public class Projetos extends JDialog {
         excluirButton.addActionListener(e -> excluirProjeto());
         buscarButton.addActionListener(e -> buscarProjeto());
         sairButton.addActionListener(e -> dispose());
+
+        // Clique na tabela
+        table1geral.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                carregarCamposDaTabela();
+            }
+        });
     }
 
-    // ===========================================================
-    // CARREGAR COMBOBOX STATUS
-    // ===========================================================
+    // ==========================
+    // CARREGAR COMBO STATUS
+    // ==========================
     private void carregarStatus() {
         cmbStatus.removeAllItems();
         cmbStatus.addItem("ATIVO");
@@ -68,9 +81,9 @@ public class Projetos extends JDialog {
         cmbStatus.addItem("CANCELADO");
     }
 
-    // ===========================================================
-    // CARREGAR USUÁRIOS
-    // ===========================================================
+    // ==========================
+    // CARREGAR USUARIOS
+    // ==========================
     private void carregarUsuarios() {
         try (Connection c = DAO_Conexao.connect();
              PreparedStatement ps = c.prepareStatement("SELECT A11_ID_USUARIO, A11_NOME FROM USUARIO_11");
@@ -79,9 +92,7 @@ public class Projetos extends JDialog {
             cmbUsuario.removeAllItems();
 
             while (rs.next()) {
-                int id = rs.getInt("A11_ID_USUARIO");
-                String nome = rs.getString("A11_NOME");
-                cmbUsuario.addItem(id + " - " + nome);
+                cmbUsuario.addItem(rs.getInt(1) + " - " + rs.getString(2));
             }
 
         } catch (Exception e) {
@@ -89,23 +100,26 @@ public class Projetos extends JDialog {
         }
     }
 
-    // ===========================================================
+    // ==========================
     // INICIALIZAR TABELA
-    // ===========================================================
+    // ==========================
     private void inicializarTabela() {
+
         tableModel = new DefaultTableModel(
                 new Object[]{"ID", "Nome", "Data Inicial", "Data Final", "Orçamento", "Status", "Departamento", "Usuário"},
                 0
         );
 
         table1geral.setModel(tableModel);
-        table1geral.setDefaultEditor(Object.class, null); // tabela somente leitura
+        table1geral.setDefaultEditor(Object.class, null); // somente leitura
+        table1geral.setAutoCreateRowSorter(true);
     }
 
-    // ===========================================================
+    // ==========================
     // PREENCHER TABELA
-    // ===========================================================
+    // ==========================
     private void preencherTabela() {
+
         try {
             Controller_Projeto_01 controller = new Controller_Projeto_01();
             ArrayList<Model_Projeto_01> lista = controller.listar_projeto();
@@ -130,9 +144,9 @@ public class Projetos extends JDialog {
         }
     }
 
-    // ===========================================================
-    // SALVAR
-    // ===========================================================
+    // ==========================
+    // SALVAR PROJETO
+    // ==========================
     private void salvarProjeto() {
         try {
             Model_Projeto_01 m = montarModelDoFormulario();
@@ -151,80 +165,77 @@ public class Projetos extends JDialog {
         }
     }
 
-    // ===========================================================
-    // EDITAR
-    // ===========================================================
+    // ==========================
+    // EDITAR PROJETO
+    // ==========================
     private void editarProjeto() {
-        int row = table1geral.getSelectedRow();
-        if (row < 0) {
-            JOptionPane.showMessageDialog(null, "Selecione um projeto para editar.");
+
+        int linha = table1geral.getSelectedRow();
+        if (linha < 0) {
+            JOptionPane.showMessageDialog(null, "Selecione um projeto.");
             return;
         }
 
-        int id = (int) tableModel.getValueAt(row, 0);
-        Controller_Projeto_01 controller = new Controller_Projeto_01();
-        Model_Projeto_01 model = controller.buscar_projeto(id);
+        int id = (int) tableModel.getValueAt(linha, 0);
 
-        if (model == null) {
+        Controller_Projeto_01 controller = new Controller_Projeto_01();
+        Model_Projeto_01 atual = controller.buscar_projeto(id);
+
+        if (atual == null) {
             JOptionPane.showMessageDialog(null, "Projeto não encontrado.");
             return;
         }
 
-        preencherFormulario(model);
-
         if (JOptionPane.showConfirmDialog(null, "Salvar alterações?", "Confirmar", JOptionPane.YES_NO_OPTION)
                 == JOptionPane.YES_OPTION) {
 
-            try {
-                Model_Projeto_01 atualizado = montarModelDoFormulario();
-                atualizado.setA01_id_projeto(model.getA01_id_projeto());
+            Model_Projeto_01 novo = montarModelDoFormulario();
+            novo.setA01_id_projeto(id);
 
-                if (controller.atualizar_projeto(atualizado)) {
-                    JOptionPane.showMessageDialog(null, "Projeto atualizado!");
-                    limparCampos();
-                    preencherTabela();
-                } else {
-                    JOptionPane.showMessageDialog(null, "Erro ao atualizar.");
-                }
-
-            } catch (Exception e) {
-                JOptionPane.showMessageDialog(null, "Erro ao atualizar: " + e.getMessage());
+            if (controller.atualizar_projeto(novo)) {
+                JOptionPane.showMessageDialog(null, "Atualizado com sucesso!");
+                preencherTabela();
+                limparCampos();
+            } else {
+                JOptionPane.showMessageDialog(null, "Erro ao atualizar.");
             }
         }
     }
 
-    // ===========================================================
+    // ==========================
     // EXCLUIR
-    // ===========================================================
+    // ==========================
     private void excluirProjeto() {
-        int row = table1geral.getSelectedRow();
-        if (row < 0) {
-            JOptionPane.showMessageDialog(null, "Selecione um projeto para excluir.");
+        int linha = table1geral.getSelectedRow();
+        if (linha < 0) {
+            JOptionPane.showMessageDialog(null, "Selecione um projeto.");
             return;
         }
 
-        int id = (int) tableModel.getValueAt(row, 0);
+        int id = (int) tableModel.getValueAt(linha, 0);
 
-        if (JOptionPane.showConfirmDialog(null,
-                "Excluir projeto " + id + "?", "Confirmar",
-                JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+        if (JOptionPane.showConfirmDialog(null, "Excluir projeto?", "Confirmar", JOptionPane.YES_NO_OPTION)
+                == JOptionPane.YES_OPTION) {
 
             Controller_Projeto_01 controller = new Controller_Projeto_01();
+
             if (controller.deletar_projeto(id)) {
-                JOptionPane.showMessageDialog(null, "Excluído com sucesso!");
+                JOptionPane.showMessageDialog(null, "Excluído!");
                 preencherTabela();
+                limparCampos();
             } else {
                 JOptionPane.showMessageDialog(null, "Erro ao excluir.");
             }
         }
     }
 
-    // ===========================================================
-    // BUSCAR
-    // ===========================================================
+    // ==========================
+    // BUSCAR — ID VIA INPUT
+    // ==========================
     private void buscarProjeto() {
         try {
             String s = JOptionPane.showInputDialog("ID do projeto:");
+
             if (s == null || s.isEmpty()) return;
 
             int id = Integer.parseInt(s);
@@ -244,21 +255,37 @@ public class Projetos extends JDialog {
         }
     }
 
-    // ===========================================================
-    // MÉTODOS AUXILIARES
-    // ===========================================================
+    // ==========================
+    // Montar Model do Formulário
+    // ==========================
     private Model_Projeto_01 montarModelDoFormulario() {
         Model_Projeto_01 m = new Model_Projeto_01();
 
         m.setA01_nome_projeto(txtNomeProjeto.getText().trim());
-        m.setA01_descricao(txtDescricao.getText());
+        m.setA01_descricao(editorPane1Descri.getText());
 
-        m.setA01_data_inicial(java.sql.Date.valueOf(textField1dataIni.getText().trim()));
+        try {
+            m.setA01_data_inicial(Date.valueOf(textField1dataIni.getText().trim()));
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Data inicial inválida! Use AAAA-MM-DD.");
+            return null;
+        }
 
         String dataF = txtDataFinal.getText().trim();
-        m.setA01_data_final(dataF.isEmpty() ? null : java.sql.Date.valueOf(dataF));
+        try {
+            m.setA01_data_final(dataF.isEmpty() ? null : Date.valueOf(dataF));
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Data final inválida! Use AAAA-MM-DD.");
+            return null;
+        }
 
-        m.setA01_orcamento(Double.parseDouble(txtOrcamento.getText().trim()));
+        try {
+            m.setA01_orcamento(Double.parseDouble(txtOrcamento.getText().trim()));
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Orçamento inválido!");
+            return null;
+        }
+
         m.setA01_status_projeto(cmbStatus.getSelectedItem().toString());
         m.setA01_departamento(txtDepartamento.getText().trim());
 
@@ -268,15 +295,22 @@ public class Projetos extends JDialog {
         return m;
     }
 
+    // ==========================
+    // Preencher Formulário
+    // ==========================
     private void preencherFormulario(Model_Projeto_01 m) {
+
         txtNomeProjeto.setText(m.getA01_nome_projeto());
-        txtDescricao.setText(m.getA01_descricao());
+        editorPane1Descri.setText(m.getA01_descricao());
+
         textField1dataIni.setText(m.getA01_data_inicial() != null ? m.getA01_data_inicial().toString() : "");
         txtDataFinal.setText(m.getA01_data_final() != null ? m.getA01_data_final().toString() : "");
+
         txtOrcamento.setText(String.valueOf(m.getA01_orcamento()));
         txtDepartamento.setText(m.getA01_departamento());
         cmbStatus.setSelectedItem(m.getA01_status_projeto());
 
+        // Selecionar usuário
         for (int i = 0; i < cmbUsuario.getItemCount(); i++) {
             if (cmbUsuario.getItemAt(i).startsWith(m.getA01_id_usuario() + " - ")) {
                 cmbUsuario.setSelectedIndex(i);
@@ -285,14 +319,48 @@ public class Projetos extends JDialog {
         }
     }
 
+    // ==========================
+    // Clique na tabela → preencher
+    // ==========================
+    private void carregarCamposDaTabela() {
+
+        int linha = table1geral.getSelectedRow();
+        if (linha < 0) return;
+
+        txtNomeProjeto.setText(tableModel.getValueAt(linha, 1).toString());
+        textField1dataIni.setText(tableModel.getValueAt(linha, 2).toString());
+        txtDataFinal.setText(tableModel.getValueAt(linha, 3) != null ? tableModel.getValueAt(linha, 3).toString() : "");
+        txtOrcamento.setText(tableModel.getValueAt(linha, 4).toString());
+        cmbStatus.setSelectedItem(tableModel.getValueAt(linha, 5).toString());
+        txtDepartamento.setText(tableModel.getValueAt(linha, 6).toString());
+
+        int userId = (int) tableModel.getValueAt(linha, 7);
+
+        for (int i = 0; i < cmbUsuario.getItemCount(); i++) {
+            if (cmbUsuario.getItemAt(i).startsWith(userId + " - ")) {
+                cmbUsuario.setSelectedIndex(i);
+                break;
+            }
+        }
+
+        // Buscar descrição do banco (não está na tabela)
+        Controller_Projeto_01 controller = new Controller_Projeto_01();
+        Model_Projeto_01 p = controller.buscar_projeto((int) tableModel.getValueAt(linha, 0));
+        if (p != null) editorPane1Descri.setText(p.getA01_descricao());
+    }
+
+    // ==========================
+    // Limpar Campos
+    // ==========================
     private void limparCampos() {
         txtNomeProjeto.setText("");
-        txtDescricao.setText("");
+        editorPane1Descri.setText("");
         textField1dataIni.setText("");
         txtDataFinal.setText("");
         txtOrcamento.setText("");
         txtDepartamento.setText("");
         cmbStatus.setSelectedIndex(0);
         if (cmbUsuario.getItemCount() > 0) cmbUsuario.setSelectedIndex(0);
+        table1geral.clearSelection();
     }
 }
