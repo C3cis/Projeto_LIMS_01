@@ -88,7 +88,7 @@
             <properties/>
             <border type="none"/>
             <children>
-              <component id="5c708" class="javax.swing.JTable" binding="table1" default-binding="true">
+              <component id="5c708" class="javax.swing.JTable" binding="table1Geral">
                 <constraints/>
                 <properties/>
               </component>
@@ -120,7 +120,7 @@
                   <text value="Nome"/>
                 </properties>
               </component>
-              <component id="955c1" class="javax.swing.JTextField" binding="textField2" default-binding="true">
+              <component id="955c1" class="javax.swing.JTextField" binding="textField2Nome">
                 <constraints>
                   <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
                     <preferred-size width="150" height="-1"/>
@@ -136,7 +136,7 @@
                   <text value="CNPJ"/>
                 </properties>
               </component>
-              <component id="d3f6a" class="javax.swing.JTextField" binding="textField1" default-binding="true">
+              <component id="d3f6a" class="javax.swing.JTextField" binding="textField1CNPJ">
                 <constraints>
                   <grid row="0" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
                     <preferred-size width="150" height="-1"/>
@@ -152,7 +152,7 @@
                   <text value="Telefone"/>
                 </properties>
               </component>
-              <component id="85c96" class="javax.swing.JTextField" binding="textField4" default-binding="true">
+              <component id="85c96" class="javax.swing.JTextField" binding="textField4Telefone">
                 <constraints>
                   <grid row="0" column="5" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
                     <preferred-size width="150" height="-1"/>
@@ -168,7 +168,7 @@
                   <text value="Email"/>
                 </properties>
               </component>
-              <component id="5dc3e" class="javax.swing.JTextField" binding="textField3" default-binding="true">
+              <component id="5dc3e" class="javax.swing.JTextField" binding="textField3Email">
                 <constraints>
                   <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
                     <preferred-size width="150" height="-1"/>
@@ -184,7 +184,7 @@
                   <text value="Endereço"/>
                 </properties>
               </component>
-              <component id="e36ec" class="javax.swing.JTextField" binding="textField5" default-binding="true">
+              <component id="e36ec" class="javax.swing.JTextField" binding="textField5Endereco">
                 <constraints>
                   <grid row="1" column="3" row-span="1" col-span="3" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
                     <preferred-size width="150" height="-1"/>

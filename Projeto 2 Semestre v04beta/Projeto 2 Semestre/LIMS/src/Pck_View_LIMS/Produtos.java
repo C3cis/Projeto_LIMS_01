@@ -6,6 +6,7 @@ import java.sql.*;
 import java.util.ArrayList;
 
 import Pck_Controller_LIMS.Controller_Produto_02;
+import Pck_Controller_LIMS.Controller_Projeto_01;
 import Pck_Model_LIMS.Model_Produto_02;
 import Pck_DAO_LIMS.DAO_Conexao;
 
@@ -13,19 +14,20 @@ public class Produtos extends JDialog {
 
     private JPanel contentPane;
     private JButton sairButton;
-    private JTextField textField2;   // Nome
+    private JTextField textField2nomeProduto;   // Nome
     private JButton salvarButton;
     private JButton editarButton;
     private JButton excluirButton;
     private JButton buscarButton;
     private JTable table1;
 
-    private JTextField textField1;   // Data cadastro
+    private JTextField textField1DataCadastro;   // Data cadastro
     private JTextField textField3ValorProd;  // Data chegada
-    private JTextField textField6;   // Valor
+    private JTextField textField6DataChegada;   // Valor
 
     private JComboBox comboBox1Fornecedor;     // Fornecedor
-    private JComboBox comboBox2Status;         // Status
+    private JComboBox comboBox2Status;// Status/ tipo
+    private JComboBox comboBox3NomeProjeto; //colocar o nome do projeto vinculado
 
     private JEditorPane editorPane1;  // Descrição
     private JEditorPane editorPane2;  // Reserva
@@ -161,36 +163,41 @@ public class Produtos extends JDialog {
     // ============================================================
     private void onSalvar() {
         try {
-            String nome = textField2.getText().trim();
+            String nome = textField2nomeProduto.getText().trim();
             if (nome.isEmpty()) {
                 JOptionPane.showMessageDialog(null, "Nome obrigatório.");
                 return;
             }
 
-            java.sql.Date cad = java.sql.Date.valueOf(textField1.getText().trim());
+            // Datas corretas
+            java.sql.Date dataCad = java.sql.Date.valueOf(textField1DataCadastro.getText().trim());
 
-            String txtCheg = textField3ValorProd.getText().trim();
-            java.sql.Date cheg = txtCheg.isEmpty() ? cad : java.sql.Date.valueOf(txtCheg);
+            String chegadaTxt = textField6DataChegada.getText().trim();
+            java.sql.Date dataChegada = chegadaTxt.isEmpty()
+                    ? dataCad
+                    : java.sql.Date.valueOf(chegadaTxt);
 
-            double valor = Double.parseDouble(textField6.getText().trim());
+            // Valor correto (textField3ValorProd)
+            double valor = Double.parseDouble(textField3ValorProd.getText().trim());
 
-            int idProj = Integer.parseInt(comboBox1.getSelectedItem().toString().split(" - ")[0]);
-            int idForn = Integer.parseInt(comboBox1Fornecedor.getSelectedItem().toString().split(" - ")[0]);
+            // ComboBoxes corrigidos
+            int idFornecedor = Integer.parseInt(comboBox1Fornecedor.getSelectedItem().toString().split(" - ")[0]);
+            int idProjeto = Integer.parseInt(comboBox3NomeProjeto.getSelectedItem().toString().split(" - ")[0]);
             String status = comboBox2Status.getSelectedItem().toString();
 
             boolean ok = controller.inserirProduto(
                     nome,
                     editorPane1.getText(),
                     status,
-                    new java.util.Date(cad.getTime()),
-                    new java.util.Date(cheg.getTime()),
+                    new java.util.Date(dataCad.getTime()),
+                    new java.util.Date(dataChegada.getTime()),
                     valor,
-                    idProj,
-                    idForn
+                    idProjeto,
+                    idFornecedor
             );
 
             if (ok) {
-                JOptionPane.showMessageDialog(null, "Salvo!");
+                JOptionPane.showMessageDialog(null, "Salvo com sucesso!");
                 preencherTabela();
                 limparCampos();
             }
@@ -199,101 +206,75 @@ public class Produtos extends JDialog {
             JOptionPane.showMessageDialog(null, "Erro ao salvar: " + e.getMessage());
         }
     }
+    private void onExcluir() {
+        int linha = table1.getSelectedRow();
+        if (linha < 0) {
+            JOptionPane.showMessageDialog(null, "Selecione um produto.");
+            return;
+        }
 
+        int id = (int) tableModel.getValueAt(linha, 0);
+
+        if (JOptionPane.showConfirmDialog(null, "Excluir produto?", "Confirmar", JOptionPane.YES_NO_OPTION)
+                == JOptionPane.YES_OPTION) {
+
+            Connection con = DAO_Conexao.connect();
+            Controller_Produto_02 controller = new Controller_Produto_02(con);
+
+            if (controller.excluirProduto(id)) {
+                JOptionPane.showMessageDialog(null, "Excluído!");
+                preencherTabela();
+                limparCampos();
+            } else {
+                JOptionPane.showMessageDialog(null, "Erro ao excluir.");
+            }
+        }
+    }
     // ============================================================
     // EDITAR
     // ============================================================
     private void onEditar() {
         try {
             int row = table1.getSelectedRow();
-            if (row < 0) {
-                JOptionPane.showMessageDialog(null, "Selecione um produto.");
+            if (row == -1) {
+                JOptionPane.showMessageDialog(null, "Selecione um produto para editar.");
                 return;
             }
 
-            int id = (int) tableModel.getValueAt(row, 0);
-            Model_Produto_02 original = controller.buscarProduto(id);
+            int id = Integer.parseInt(table1.getValueAt(row, 0).toString());
 
-            if (original == null) {
-                JOptionPane.showMessageDialog(null, "Produto não encontrado.");
-                return;
-            }
+            String nome = textField2nomeProduto.getText().trim();
+            java.sql.Date dataCad = java.sql.Date.valueOf(textField1DataCadastro.getText().trim());
 
-            preencherCampos(original);
+            String chegadaTxt = textField6DataChegada.getText().trim();
+            java.sql.Date dataChegada = chegadaTxt.isEmpty() ? dataCad : java.sql.Date.valueOf(chegadaTxt);
 
-            if (JOptionPane.showConfirmDialog(
-                    null, "Salvar alterações?", "Confirmar",
-                    JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+            double valor = Double.parseDouble(textField3ValorProd.getText().trim());
 
-                String nome = textField2.getText().trim();
-                String descricao = editorPane1.getText();
-                String status = comboBox2Status.getSelectedItem().toString();
+            int idFornecedor = Integer.parseInt(comboBox1Fornecedor.getSelectedItem().toString().split(" - ")[0]);
+            int idProjeto = Integer.parseInt(comboBox3NomeProjeto.getSelectedItem().toString().split(" - ")[0]);
+            String status = comboBox2Status.getSelectedItem().toString();
 
-                java.sql.Date cad = java.sql.Date.valueOf(textField1.getText().trim());
+            boolean ok = controller.atualizarProduto(
+                    id,
+                    nome,
+                    editorPane1.getText(),
+                    status,
+                    new java.util.Date(dataCad.getTime()),
+                    new java.util.Date(dataChegada.getTime()),
+                    valor,
+                    idProjeto,
+                    idFornecedor
+            );
 
-                String txtCheg = textField3ValorProd.getText().trim();
-                java.sql.Date cheg = txtCheg.isEmpty() ? cad : java.sql.Date.valueOf(txtCheg);
-
-                double valor = Double.parseDouble(textField6.getText().trim());
-
-                int idProj = Integer.parseInt(comboBox1.getSelectedItem().toString().split(" - ")[0]);
-                int idForn = Integer.parseInt(comboBox1Fornecedor.getSelectedItem().toString().split(" - ")[0]);
-
-                boolean ok = controller.atualizarProduto(
-                        id,
-                        nome,
-                        descricao,
-                        status,
-                        new java.util.Date(cad.getTime()),
-                        new java.util.Date(cheg.getTime()),
-                        valor,
-                        idProj,
-                        idForn
-                );
-
-                if (ok) {
-                    JOptionPane.showMessageDialog(null, "Atualizado!");
-                    preencherTabela();
-                }
+            if (ok) {
+                JOptionPane.showMessageDialog(null, "Editado com sucesso!");
+                preencherTabela();
+                limparCampos();
             }
 
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Erro ao editar: " + e.getMessage());
-        }
-    }
-    private void onExcluir() {
-        try {
-            int row = table1.getSelectedRow();
-            if (row < 0) {
-                JOptionPane.showMessageDialog(null, "Selecione um produto para excluir.");
-                return;
-            }
-
-            int id = (int) tableModel.getValueAt(row, 0);
-
-            // Confirmação
-            int opc = JOptionPane.showConfirmDialog(
-                    null,
-                    "Deseja realmente excluir o produto ID " + id + "?",
-                    "Confirmar Exclusão",
-                    JOptionPane.YES_NO_OPTION
-            );
-
-            if (opc != JOptionPane.YES_OPTION) return;
-
-            // Chama o controller
-            boolean ok = controller.excluirProduto(id);
-
-            if (ok) {
-                JOptionPane.showMessageDialog(null, "Excluído com sucesso!");
-                preencherTabela();
-                limparCampos();
-            } else {
-                JOptionPane.showMessageDialog(null, "Erro ao excluir. Verifique dependências.");
-            }
-
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Erro ao excluir: " + e.getMessage());
         }
     }
     // ============================================================
@@ -334,14 +315,14 @@ public class Produtos extends JDialog {
     // PREENCHER CAMPOS
     // ============================================================
     private void preencherCampos(Model_Produto_02 p) {
-        textField2.setText(p.getA02_nome_produto());
+        textField2nomeProduto.setText(p.getA02_nome_produto());
         editorPane1.setText(p.getA02_descricao());
 
-        textField1.setText(String.valueOf(p.getA02_data_cadastro()));
+        textField1DataCadastro.setText(String.valueOf(p.getA02_data_cadastro()));
         textField3ValorProd.setText(String.valueOf(p.getA02_data_chegada()));
-        textField6.setText(String.valueOf(p.getA02_valor_unitario()));
+        textField6DataChegada.setText(String.valueOf(p.getA02_valor_unitario()));
 
-        selecionarItem(comboBox1, p.getA02_id_projeto());
+        selecionarItem(comboBox3NomeProjeto, p.getA02_id_projeto());
         selecionarItem(comboBox1Fornecedor, p.getA02_id_fornecedor());
 
         comboBox2Status.setSelectedItem(p.getA02_tipo());
@@ -359,10 +340,10 @@ public class Produtos extends JDialog {
 
     // ============================================================
     private void limparCampos() {
-        textField2.setText("");
-        textField1.setText("");
+        textField2nomeProduto.setText("");
+        textField1DataCadastro.setText("");
         textField3ValorProd.setText("");
-        textField6.setText("");
+        textField6DataChegada.setText("");
         editorPane1.setText("");
     }
 }

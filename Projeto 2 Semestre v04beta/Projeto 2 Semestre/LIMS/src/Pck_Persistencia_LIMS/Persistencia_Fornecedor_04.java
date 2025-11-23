@@ -12,15 +12,16 @@ public class Persistencia_Fornecedor_04 {
     public boolean inserir_fornecedor(Model_Fornecedor_04 f) {
         Connection conn = null;
         CallableStatement stmt = null;
+
         try {
             conn = DAO_Conexao.connect();
 
             stmt = conn.prepareCall("{CALL SP_INSERIR_FORNECEDOR_04(?,?,?,?,?)}");
             stmt.setString(1, f.getA04_nome_fornecedor());
-            stmt.setString(2, f.getA04_contato_fornecedor());
-            stmt.setString(3, f.getA04_email_fornecedor());
-            stmt.setString(4, f.getA04_telefone_fornecedor());
-            stmt.setString(5, f.getA04_cnpj_fornecedor());
+            stmt.setString(2, f.getA04_cnpj_fornecedor());
+            stmt.setString(3, f.getA04_telefone_fornecedor());
+            stmt.setString(4, f.getA04_email_fornecedor());
+            stmt.setString(5, f.getA04_endereco_fornecedor());
 
             stmt.execute();
             return true;
@@ -78,12 +79,11 @@ public class Persistencia_Fornecedor_04 {
                 Model_Fornecedor_04 f = new Model_Fornecedor_04();
 
                 f.setA04_id_fornecedor(rs.getInt("A04_ID_FORNECEDOR"));
-                f.setA04_nome_fornecedor(rs.getString("A04_NOME_FORNECEDOR"));
-                f.setA04_contato_fornecedor(rs.getString("A04_CONTATO_FORNECEDOR"));
-                f.setA04_email_fornecedor(rs.getString("A04_EMAIL_FORNECEDOR"));
-                f.setA04_telefone_fornecedor(rs.getString("A04_TELEFONE_FORNECEDOR"));
-                f.setA04_cnpj_fornecedor(rs.getString("A04_CNPJ_FORNECEDOR"));
-
+                f.setA04_nome_fornecedor(rs.getString("A04_NOME"));
+                f.setA04_cnpj_fornecedor(rs.getString("A04_CNPJ"));
+                f.setA04_telefone_fornecedor(rs.getString("A04_TELEFONE"));
+                f.setA04_email_fornecedor(rs.getString("A04_EMAIL"));
+                f.setA04_endereco_fornecedor(rs.getString("A04_ENDERECO"));
                 return f;
             }
 
@@ -115,11 +115,11 @@ public class Persistencia_Fornecedor_04 {
                 Model_Fornecedor_04 f = new Model_Fornecedor_04();
 
                 f.setA04_id_fornecedor(rs.getInt("A04_ID_FORNECEDOR"));
-                f.setA04_nome_fornecedor(rs.getString("A04_NOME_FORNECEDOR"));
-                f.setA04_contato_fornecedor(rs.getString("A04_CONTATO_FORNECEDOR"));
-                f.setA04_email_fornecedor(rs.getString("A04_EMAIL_FORNECEDOR"));
-                f.setA04_telefone_fornecedor(rs.getString("A04_TELEFONE_FORNECEDOR"));
-                f.setA04_cnpj_fornecedor(rs.getString("A04_CNPJ_FORNECEDOR"));
+                f.setA04_nome_fornecedor(rs.getString("A04_NOME"));
+                f.setA04_cnpj_fornecedor(rs.getString("A04_CNPJ"));
+                f.setA04_telefone_fornecedor(rs.getString("A04_TELEFONE"));
+                f.setA04_email_fornecedor(rs.getString("A04_EMAIL"));
+                f.setA04_endereco_fornecedor(rs.getString("A04_ENDERECO"));
 
                 lista.add(f);
             }
