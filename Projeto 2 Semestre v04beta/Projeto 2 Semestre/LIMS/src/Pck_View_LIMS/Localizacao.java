@@ -14,17 +14,14 @@ import java.util.List;
  */
 public class Localizacao extends JDialog {
     private JPanel contentPane;
-    private JTextField textField1; // ID Local
-    private JTextField textField2; // Setor
-    private JTextField textField3; // Identificação
+    private JTextField textField2Setor; // Setor
+    private JTextField textField3Identificacao; // Identificação
     private JButton salvarButton;
     private JButton editarButton;
     private JButton excluirButton;
     private JButton buscarButton;
     private JButton sairButton;
-    private JTable table1;
-    private JButton buttonOK;
-    private JButton buttonCancel;
+    private JTable table1Geral;
 
     private Controller_Localizacao_07 controller;
 

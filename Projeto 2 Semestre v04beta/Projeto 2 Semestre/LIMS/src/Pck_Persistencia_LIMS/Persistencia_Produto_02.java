@@ -30,6 +30,7 @@ public class Persistencia_Produto_02 {
             cs.setInt(7, produto.getA02_id_projeto());
             cs.setInt(8, produto.getA02_id_fornecedor());
 
+
             cs.execute();
             return true;
 
