@@ -1,12 +1,12 @@
 package Pck_Model_LIMS;
 
-import java.util.Date;
+import java.sql.Date;
 
 
 public class Model_Relatorio_08 {
     private int A08_id_relatorio;
     private String A08_titulo;
-    private String A08_data_geracao;
+    private Date A08_data_geracao;
     private String A08_conteudo;
     private int A08_id_usuario;
     private int A08_id_projeto;
@@ -27,11 +27,11 @@ public class Model_Relatorio_08 {
         A08_titulo = a08_titulo;
     }
 
-    public String getA08_data_geracao() {
+    public Date getA08_data_geracao() {
         return A08_data_geracao;
     }
 
-    public void setA08_data_geracao(String a08_data_geracao) {
+    public void setA08_data_geracao(Date a08_data_geracao) {
         A08_data_geracao = a08_data_geracao;
     }
 

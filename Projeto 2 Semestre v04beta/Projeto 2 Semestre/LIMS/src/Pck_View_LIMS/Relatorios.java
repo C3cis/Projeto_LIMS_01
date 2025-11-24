@@ -1,11 +1,17 @@
 package Pck_View_LIMS;
-
 import Pck_Controller_LIMS.Controller_Relatorio_08;
+import Pck_Controller_LIMS.Controller_Projeto_01;
+import Pck_Controller_LIMS.Controller_Usuario_11;
+
 import Pck_Model_LIMS.Model_Relatorio_08;
+import Pck_Model_LIMS.Model_Projeto_01;
+import Pck_Model_LIMS.Model_Usuario_11;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import java.awt.event.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.sql.Date;
 import java.util.List;
 
 public class Relatorios extends JDialog {
@@ -15,132 +21,272 @@ public class Relatorios extends JDialog {
     private JButton editarButton;
     private JButton excluirButton;
     private JButton buscarButton;
-    private JButton listarButton;
     private JButton sairButton;
 
-    private JTable table1;
-    private JComboBox comboBox1;
-    private JComboBox comboBox2;
-    private JEditorPane editorPane1;
-    private JEditorPane editorPane2;
-    private JTextField textField1;
+    private JTable table1Geral;
+    private JTextField textField2Titulo;
+    private JEditorPane editorPane1Conteudo;
+    private JTextField textField6DataGeracao;
+    private JComboBox comboBox1Id_Usuario;
+    private JComboBox comboBox3NomeProjeto;
+    private JTextField textField2IdRelatorio;
 
-    private JTextField textFieldID;
-    private JTextField textFieldTitulo;
-    private JTextField textFieldDataGeracao;
+    private DefaultTableModel tableModel;
 
-    private JTextArea textAreaConteudo;
-    private JComboBox comboBoxUsuario;
+    private Controller_Relatorio_08 controller;
+    private Controller_Usuario_11 controllerUsuario;
+    private Controller_Projeto_01 controllerProjeto;
 
-    private Controller_Relatorio_08 controller = new Controller_Relatorio_08();
+    private int relatorioSelecionado = -1;
 
     public Relatorios() {
 
         setContentPane(contentPane);
         setModal(true);
+        setTitle("Cadastro de Relatórios");
+        setSize(1100, 700);
+        setLocationRelativeTo(null);
 
-        salvarButton.addActionListener(e -> inserir());
-        editarButton.addActionListener(e -> atualizar());
-        excluirButton.addActionListener(e -> excluir());
-        buscarButton.addActionListener(e -> buscar());
-        listarButton.addActionListener(e -> listar());
-        sairButton.addActionListener(e -> dispose());
+        controller = new Controller_Relatorio_08();
+        controllerUsuario = new Controller_Usuario_11();
+        controllerProjeto = new Controller_Projeto_01();
+
+        configurarTabela();
+        carregarCombos();
+        carregarTabela();
+
+        salvarButton.addActionListener(e -> salvarRelatorio());
+        editarButton.addActionListener(e -> editarRelatorio());
+        excluirButton.addActionListener(e -> excluirRelatorio());
+        buscarButton.addActionListener(e -> {
+            try {
+                int id = Integer.parseInt(textField2IdRelatorio.getText());
+
+                Model_Relatorio_08 m = controller.buscar(id);
+
+                if (m != null) {
+
+                    tableModel.setRowCount(0); // limpa tabela
+
+                    tableModel.addRow(new Object[]{
+                            m.getA08_id_relatorio(),
+                            m.getA08_titulo(),
+                            m.getA08_data_geracao(),
+                            m.getA08_id_usuario(),
+                            m.getA08_id_projeto()
+                    });
+
+                } else {
+                    JOptionPane.showMessageDialog(null, "ID não encontrado.");
+                }
+
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(null, "Digite um ID válido.");
+            }
+        });        sairButton.addActionListener(e -> dispose());
+
+        table1Geral.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == 1) {
+                    carregarCamposDaLinha();
+                }
+            }
+        });
     }
 
-    private void inserir() {
+    // -------------------------------------
+    // CONFIGURAÇÃO DA TABELA
+    // -------------------------------------
+    private void configurarTabela() {
+
+        tableModel = new DefaultTableModel(
+                new Object[]{"ID", "Título", "Data", "Usuário", "Projeto"}, // <-- sem conteúdo
+                0
+        ) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+
+        table1Geral.setModel(tableModel);
+
+        // Ajustar largura das colunas
+        table1Geral.getColumnModel().getColumn(0).setPreferredWidth(40);
+        table1Geral.getColumnModel().getColumn(1).setPreferredWidth(200);
+        table1Geral.getColumnModel().getColumn(2).setPreferredWidth(80);
+        table1Geral.getColumnModel().getColumn(3).setPreferredWidth(80);
+        table1Geral.getColumnModel().getColumn(4).setPreferredWidth(80);
+    }
+    // -------------------------------------
+    // CARREGAR COMBOS
+    // -------------------------------------
+    private void carregarCombos() {
+
+        // Usuários
+        comboBox1Id_Usuario.removeAllItems();
+        for (Model_Usuario_11 u : controllerUsuario.listar()) {
+            comboBox1Id_Usuario.addItem(u.getA11_id_usuario() + " - " + u.getA11_nome());
+        }
+
+        // Projetos
+        comboBox3NomeProjeto.removeAllItems();
+        for (Model_Projeto_01 p : controllerProjeto.listar_projeto()) {
+            comboBox3NomeProjeto.addItem(p.getA01_id_projeto() + " - " + p.getA01_nome_projeto());
+        }
+    }
+
+    // -------------------------------------
+    // CARREGAR TABELA
+    // -------------------------------------
+    private void carregarTabela() {
+        tableModel.setRowCount(0); // limpa a tabela
+
+        List<Model_Relatorio_08> lista = controller.listar();
+
+        for (Model_Relatorio_08 m : lista) {
+
+            // Buscar usuário
+            Model_Usuario_11 user = controllerUsuario.buscar(m.getA08_id_usuario());
+            String usuarioTexto = m.getA08_id_usuario() + " - " + user.getA11_nome();
+
+            // Buscar projeto
+            Model_Projeto_01 proj = controllerProjeto.buscar_projeto(m.getA08_id_projeto());
+            String projetoTexto = m.getA08_id_projeto() + " - " + proj.getA01_nome_projeto();
+
+            tableModel.addRow(new Object[]{
+                    m.getA08_id_relatorio(),
+                    m.getA08_titulo(),
+                    m.getA08_data_geracao(),
+                    usuarioTexto,
+                    projetoTexto
+            });
+        }
+    }
+    // -------------------------------------
+    // SALVAR RELATÓRIO
+    // -------------------------------------
+    private void salvarRelatorio() {
         try {
             Model_Relatorio_08 m = new Model_Relatorio_08();
-            m.setA08_titulo(textFieldTitulo.getText());
-            m.setA08_data_geracao(textFieldDataGeracao.getText());
-            m.setA08_conteudo(textAreaConteudo.getText());
-            m.setA08_id_usuario(Integer.parseInt(comboBoxUsuario.getSelectedItem().toString()));
 
-            if (controller.inserir(m)) {
-                JOptionPane.showMessageDialog(null, "Inserido com sucesso!");
-                listar();
-            }
+            m.setA08_titulo(textField2Titulo.getText());
+            m.setA08_conteudo(editorPane1Conteudo.getText());
+            m.setA08_data_geracao(Date.valueOf(textField6DataGeracao.getText()));
 
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-    }
+            int idUsuario = Integer.parseInt(comboBox1Id_Usuario.getSelectedItem().toString().split(" - ")[0]);
+            int idProjeto = Integer.parseInt(comboBox3NomeProjeto.getSelectedItem().toString().split(" - ")[0]);
 
-    private void atualizar() {
-        try {
-            Model_Relatorio_08 m = new Model_Relatorio_08();
-            m.setA08_id_relatorio(Integer.parseInt(textFieldID.getText()));
-            m.setA08_titulo(textFieldTitulo.getText());
-            m.setA08_data_geracao(textFieldDataGeracao.getText());
-            m.setA08_conteudo(textAreaConteudo.getText());
-            m.setA08_id_usuario(Integer.parseInt(comboBoxUsuario.getSelectedItem().toString()));
+            m.setA08_id_usuario(idUsuario);
+            m.setA08_id_projeto(idProjeto);
 
-            if (controller.atualizar(m)) {
-                JOptionPane.showMessageDialog(null, "Atualizado!");
-                listar();
-            }
+            boolean ok = controller.inserir(m);
 
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-    }
-
-    private void excluir() {
-        try {
-            int id = Integer.parseInt(textFieldID.getText());
-            if (controller.excluir(id)) {
-                JOptionPane.showMessageDialog(null, "Excluído!");
-                listar();
-            }
-
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-    }
-
-    private void buscar() {
-        try {
-            int id = Integer.parseInt(textFieldID.getText());
-            Model_Relatorio_08 m = controller.buscar(id);
-
-            if (m != null) {
-                textFieldTitulo.setText(m.getA08_titulo());
-                textFieldDataGeracao.setText(m.getA08_data_geracao());
-                textAreaConteudo.setText(m.getA08_conteudo());
-                comboBoxUsuario.setSelectedItem(String.valueOf(m.getA08_id_usuario()));
+            if (ok) {
+                JOptionPane.showMessageDialog(null, "Relatório cadastrado!");
+                carregarTabela();
             } else {
-                JOptionPane.showMessageDialog(null, "Não encontrado.");
+                JOptionPane.showMessageDialog(null, "Erro ao salvar.");
             }
 
-        } catch (Exception ex) {
-            ex.printStackTrace();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Erro: " + e.getMessage());
         }
     }
 
-    private void listar() {
+    // -------------------------------------
+    // EDITAR RELATÓRIO
+    // -------------------------------------
+    private void editarRelatorio() {
+
+        if (relatorioSelecionado == -1) {
+            JOptionPane.showMessageDialog(null, "Selecione um relatório.");
+            return;
+        }
+
         try {
-            List<Model_Relatorio_08> lista = controller.listar();
+            Model_Relatorio_08 m = new Model_Relatorio_08();
 
-            DefaultTableModel model = new DefaultTableModel();
-            model.addColumn("ID");
-            model.addColumn("Título");
-            model.addColumn("Data Geração");
-            model.addColumn("Conteúdo");
-            model.addColumn("Usuário");
+            m.setA08_id_relatorio(relatorioSelecionado);
+            m.setA08_titulo(textField2Titulo.getText());
+            m.setA08_conteudo(editorPane1Conteudo.getText());
+            m.setA08_data_geracao(Date.valueOf(textField6DataGeracao.getText()));
 
-            for (Model_Relatorio_08 m : lista) {
-                model.addRow(new Object[]{
-                        m.getA08_id_relatorio(),
-                        m.getA08_titulo(),
-                        m.getA08_data_geracao(),
-                        m.getA08_conteudo(),
-                        m.getA08_id_usuario()
-                });
+            int idUsuario = Integer.parseInt(comboBox1Id_Usuario.getSelectedItem().toString().split(" - ")[0]);
+            int idProjeto = Integer.parseInt(comboBox3NomeProjeto.getSelectedItem().toString().split(" - ")[0]);
+
+            m.setA08_id_usuario(idUsuario);
+            m.setA08_id_projeto(idProjeto);
+
+            boolean ok = controller.atualizar(m);
+
+            if (ok) {
+                JOptionPane.showMessageDialog(null, "Relatório atualizado!");
+                carregarTabela();
             }
 
-            table1.setModel(model);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Erro: " + e.getMessage());
+        }
+    }
 
-        } catch (Exception ex) {
-            ex.printStackTrace();
+    // -------------------------------------
+    // EXCLUIR RELATÓRIO
+    // -------------------------------------
+    private void excluirRelatorio() {
+
+        if (relatorioSelecionado == -1) {
+            JOptionPane.showMessageDialog(null, "Selecione um relatório.");
+            return;
+        }
+
+        if (controller.excluir(relatorioSelecionado)) {
+            JOptionPane.showMessageDialog(null, "Relatório excluído.");
+            carregarTabela();
+        }
+    }
+
+    // -------------------------------------
+    // CARREGAR CAMPOS QUANDO CLICAR NA LINHA
+    // -------------------------------------
+    private void carregarCamposDaLinha() {
+
+        int row = table1Geral.getSelectedRow();
+        if (row == -1) return;
+
+        // ID selecionado
+        relatorioSelecionado = (int) tableModel.getValueAt(row, 0);
+
+        try {
+            // Buscar o relatório completo no banco (para pegar o conteúdo)
+            Model_Relatorio_08 m = controller.buscar(relatorioSelecionado);
+
+            textField2Titulo.setText(m.getA08_titulo());
+            editorPane1Conteudo.setText(m.getA08_conteudo());
+            textField6DataGeracao.setText(String.valueOf(m.getA08_data_geracao()));
+
+            // Selecionar usuário no combo
+            for (int i = 0; i < comboBox1Id_Usuario.getItemCount(); i++) {
+                if (comboBox1Id_Usuario.getItemAt(i).toString()
+                        .startsWith(m.getA08_id_usuario() + " - ")) {
+                    comboBox1Id_Usuario.setSelectedIndex(i);
+                    break;
+                }
+            }
+
+            // Selecionar projeto no combo
+            for (int i = 0; i < comboBox3NomeProjeto.getItemCount(); i++) {
+                if (comboBox3NomeProjeto.getItemAt(i).toString()
+                        .startsWith(m.getA08_id_projeto() + " - ")) {
+                    comboBox3NomeProjeto.setSelectedIndex(i);
+                    break;
+                }
+            }
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null,
+                    "Erro ao carregar dados para edição: " + e.getMessage());
         }
     }
 }
