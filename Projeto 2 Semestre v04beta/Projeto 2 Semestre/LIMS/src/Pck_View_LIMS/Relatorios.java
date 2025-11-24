@@ -23,6 +23,7 @@ public class Relatorios extends JDialog {
     private JComboBox comboBox2;
     private JEditorPane editorPane1;
     private JEditorPane editorPane2;
+    private JTextField textField1;
 
     private JTextField textFieldID;
     private JTextField textFieldTitulo;
