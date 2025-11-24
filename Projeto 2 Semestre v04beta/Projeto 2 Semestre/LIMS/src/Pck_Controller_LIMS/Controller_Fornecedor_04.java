@@ -1,55 +1,64 @@
 package Pck_Controller_LIMS;
+
 import Pck_Model_LIMS.Model_Fornecedor_04;
 import Pck_Persistencia_LIMS.Persistencia_Fornecedor_04;
 
 import java.util.ArrayList;
 
 public class Controller_Fornecedor_04 {
-    private Persistencia_Fornecedor_04 persistencia;
 
-    public Controller_Fornecedor_04() {
-        persistencia = new Persistencia_Fornecedor_04();
+    Persistencia_Fornecedor_04 persistencia = new Persistencia_Fornecedor_04();
+
+    // --------------------------- SALVAR ---------------------------
+    public String salvarFornecedor(Model_Fornecedor_04 fornecedor) {
+
+        if (fornecedor.getA04_nome().isEmpty() ||
+                fornecedor.getA04_cnpj().isEmpty() ||
+                fornecedor.getA04_telefone().isEmpty() ||
+                fornecedor.getA04_email().isEmpty() ||
+                fornecedor.getA04_endereco().isEmpty()) {
+
+            return "Preencha todos os campos obrigatórios!";
+        }
+
+        boolean sucesso = persistencia.salvarFornecedor(fornecedor);
+        return sucesso ? "Fornecedor salvo com sucesso!" : "Erro ao salvar fornecedor!";
     }
 
-    // ------------------ SALVAR ------------------
-    public boolean salvarFornecedor(String nome, String cnpj, String telefone, String email, String endereco) {
-        Model_Fornecedor_04 f = new Model_Fornecedor_04();
+    // --------------------------- ATUALIZAR ---------------------------
+    public String atualizarFornecedor(Model_Fornecedor_04 fornecedor) {
 
-        f.setA04_nome_fornecedor(nome);
-        f.setA04_cnpj_fornecedor(cnpj);
-        f.setA04_telefone_fornecedor(telefone);
-        f.setA04_email_fornecedor(email);
-        f.setA04_endereco_fornecedor(endereco);
+        if (fornecedor.getA04_id_fornecedor() <= 0) {
+            return "ID inválido!";
+        }
 
-        return persistencia.inserir_fornecedor(f);
+        boolean sucesso = persistencia.atualizarFornecedor(fornecedor);
+        return sucesso ? "Fornecedor atualizado com sucesso!" : "Erro ao atualizar fornecedor!";
     }
 
-    // ------------------ EDITAR ------------------
-    public boolean editarFornecedor(int id, String nome, String cnpj, String telefone, String email, String endereco) {
-        Model_Fornecedor_04 f = new Model_Fornecedor_04();
+    // --------------------------- EXCLUIR ---------------------------
+    public String excluirFornecedor(int id) {
 
-        f.setA04_id_fornecedor(id);
-        f.setA04_nome_fornecedor(nome);
-        f.setA04_cnpj_fornecedor(cnpj);
-        f.setA04_telefone_fornecedor(telefone);
-        f.setA04_email_fornecedor(email);
-        f.setA04_endereco_fornecedor(endereco);
+        if (id <= 0) {
+            return "ID inválido!";
+        }
 
-        return persistencia.atualizar_fornecedor(f);
+        boolean sucesso = persistencia.excluirFornecedor(id);
+        return sucesso ? "Fornecedor excluído com sucesso!" : "Erro ao excluir fornecedor!";
     }
 
-    // ------------------ BUSCAR ------------------
-    public Model_Fornecedor_04 buscarFornecedor(int id) {
-        return persistencia.buscar_fornecedor(id);
-    }
-
-    // ------------------ LISTAR ------------------
+    // --------------------------- LISTAR ---------------------------
     public ArrayList<Model_Fornecedor_04> listarFornecedores() {
-        return persistencia.listar_fornecedor();
+        return persistencia.listarFornecedores();
     }
 
-    // ------------------ EXCLUIR ------------------
-    public boolean excluirFornecedor(int id) {
-        return persistencia.deletar_fornecedor(id);
+    // --------------------------- BUSCAR POR ID ---------------------------
+    public Model_Fornecedor_04 buscarFornecedorPorID(int id) {
+
+        if (id <= 0) {
+            return null;
+        }
+
+        return persistencia.buscarFornecedorPorID(id);
     }
 }

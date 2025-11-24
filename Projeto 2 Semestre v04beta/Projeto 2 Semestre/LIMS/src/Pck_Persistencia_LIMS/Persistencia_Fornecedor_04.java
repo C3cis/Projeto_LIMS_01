@@ -1,4 +1,5 @@
 package Pck_Persistencia_LIMS;
+
 import Pck_Model_LIMS.Model_Fornecedor_04;
 import Pck_DAO_LIMS.DAO_Conexao;
 
@@ -8,153 +9,139 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 
 public class Persistencia_Fornecedor_04 {
-    // --------------------- INSERIR ------------------------
-    public boolean inserir_fornecedor(Model_Fornecedor_04 f) {
-        Connection conn = null;
-        CallableStatement stmt = null;
 
+    // --------------------- INSERT ------------------------
+    public boolean salvarFornecedor(Model_Fornecedor_04 fornecedor) {
         try {
-            conn = DAO_Conexao.connect();
+            Connection conn = DAO_Conexao.connect();
 
-            stmt = conn.prepareCall("{CALL SP_INSERIR_FORNECEDOR_04(?,?,?,?,?)}");
-            stmt.setString(1, f.getA04_nome_fornecedor());
-            stmt.setString(2, f.getA04_cnpj_fornecedor());
-            stmt.setString(3, f.getA04_telefone_fornecedor());
-            stmt.setString(4, f.getA04_email_fornecedor());
-            stmt.setString(5, f.getA04_endereco_fornecedor());
+            CallableStatement stmt = conn.prepareCall("{CALL SP_INSERIR_FORNECEDOR_04(?, ?, ?, ?, ?)}");
+            stmt.setString(1, fornecedor.getA04_nome());
+            stmt.setString(2, fornecedor.getA04_cnpj());
+            stmt.setString(3, fornecedor.getA04_telefone());
+            stmt.setString(4, fornecedor.getA04_email());
+            stmt.setString(5, fornecedor.getA04_endereco());
 
             stmt.execute();
+            stmt.close();
+            conn.close();
             return true;
 
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println("Erro salvar fornecedor: " + e.getMessage());
             return false;
-        } finally {
-            try { if (stmt != null) stmt.close(); } catch (Exception ignored) {}
-            try { if (conn != null) conn.close(); } catch (Exception ignored) {}
         }
     }
 
-    // --------------------- ATUALIZAR ------------------------
-    public boolean atualizar_fornecedor(Model_Fornecedor_04 f) {
-        Connection conn = null;
-        CallableStatement stmt = null;
+    // --------------------- UPDATE ------------------------
+    public boolean atualizarFornecedor(Model_Fornecedor_04 fornecedor) {
         try {
-            conn = DAO_Conexao.connect();
+            Connection conn = DAO_Conexao.connect();
 
-            stmt = conn.prepareCall("{CALL SP_ATUALIZAR_FORNECEDOR_04(?,?,?,?,?,?)}");
-            stmt.setInt(1, f.getA04_id_fornecedor());
-            stmt.setString(2, f.getA04_nome_fornecedor());
-            stmt.setString(3, f.getA04_contato_fornecedor());
-            stmt.setString(4, f.getA04_email_fornecedor());
-            stmt.setString(5, f.getA04_telefone_fornecedor());
-            stmt.setString(6, f.getA04_cnpj_fornecedor());
+            CallableStatement stmt = conn.prepareCall("{CALL SP_ATUALIZAR_FORNECEDOR_04(?, ?, ?, ?, ?, ?)}");
+            stmt.setInt(1, fornecedor.getA04_id_fornecedor());
+            stmt.setString(2, fornecedor.getA04_nome());
+            stmt.setString(3, fornecedor.getA04_cnpj());
+            stmt.setString(4, fornecedor.getA04_telefone());
+            stmt.setString(5, fornecedor.getA04_email());
+            stmt.setString(6, fornecedor.getA04_endereco());
 
             stmt.execute();
+            stmt.close();
+            conn.close();
             return true;
 
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println("Erro atualizar fornecedor: " + e.getMessage());
             return false;
-        } finally {
-            try { if (stmt != null) stmt.close(); } catch (Exception ignored) {}
-            try { if (conn != null) conn.close(); } catch (Exception ignored) {}
         }
     }
 
-    // --------------------- BUSCAR ------------------------
-    public Model_Fornecedor_04 buscar_fornecedor(int id) {
-        Connection conn = null;
-        CallableStatement stmt = null;
-        ResultSet rs = null;
+    // --------------------- DELETE ------------------------
+    public boolean excluirFornecedor(int id) {
         try {
-            conn = DAO_Conexao.connect();
+            Connection conn = DAO_Conexao.connect();
 
-            stmt = conn.prepareCall("{CALL SP_BUSCAR_FORNECEDOR_04(?)}");
+            CallableStatement stmt = conn.prepareCall("{CALL SP_EXCLUIR_FORNECEDOR_04(?)}");
             stmt.setInt(1, id);
 
-            rs = stmt.executeQuery();
-
-            if (rs.next()) {
-                Model_Fornecedor_04 f = new Model_Fornecedor_04();
-
-                f.setA04_id_fornecedor(rs.getInt("A04_ID_FORNECEDOR"));
-                f.setA04_nome_fornecedor(rs.getString("A04_NOME"));
-                f.setA04_cnpj_fornecedor(rs.getString("A04_CNPJ"));
-                f.setA04_telefone_fornecedor(rs.getString("A04_TELEFONE"));
-                f.setA04_email_fornecedor(rs.getString("A04_EMAIL"));
-                f.setA04_endereco_fornecedor(rs.getString("A04_ENDERECO"));
-                return f;
-            }
+            stmt.execute();
+            stmt.close();
+            conn.close();
+            return true;
 
         } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            try { if (rs != null) rs.close(); } catch (Exception ignored) {}
-            try { if (stmt != null) stmt.close(); } catch (Exception ignored) {}
-            try { if (conn != null) conn.close(); } catch (Exception ignored) {}
+            System.out.println("Erro excluir fornecedor: " + e.getMessage());
+            return false;
         }
-
-        return null;
     }
 
-    // --------------------- LISTAR ------------------------
-    public ArrayList<Model_Fornecedor_04> listar_fornecedor() {
+    // --------------------- LISTAR TODOS ------------------------
+    public ArrayList<Model_Fornecedor_04> listarFornecedores() {
         ArrayList<Model_Fornecedor_04> lista = new ArrayList<>();
-        Connection conn = null;
-        CallableStatement stmt = null;
-        ResultSet rs = null;
 
         try {
-            conn = DAO_Conexao.connect();
+            Connection conn = DAO_Conexao.connect();
 
-            stmt = conn.prepareCall("{CALL SP_LISTAR_FORNECEDOR_04()}");
-            rs = stmt.executeQuery();
+            CallableStatement stmt = conn.prepareCall("{CALL SP_LISTAR_FORNECEDOR_04()}");
+
+            ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
+
                 Model_Fornecedor_04 f = new Model_Fornecedor_04();
 
-                f.setA04_id_fornecedor(rs.getInt("A04_ID_FORNECEDOR"));
-                f.setA04_nome_fornecedor(rs.getString("A04_NOME"));
-                f.setA04_cnpj_fornecedor(rs.getString("A04_CNPJ"));
-                f.setA04_telefone_fornecedor(rs.getString("A04_TELEFONE"));
-                f.setA04_email_fornecedor(rs.getString("A04_EMAIL"));
-                f.setA04_endereco_fornecedor(rs.getString("A04_ENDERECO"));
+                f.setA04_id_fornecedor(rs.getInt("a04_id_fornecedor"));
+                f.setA04_nome(rs.getString("a04_nome"));
+                f.setA04_cnpj(rs.getString("a04_cnpj"));
+                f.setA04_telefone(rs.getString("a04_telefone"));
+                f.setA04_email(rs.getString("a04_email"));
+                f.setA04_endereco(rs.getString("a04_endereco"));
 
                 lista.add(f);
             }
 
+            rs.close();
+            stmt.close();
+            conn.close();
+
         } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            try { if (rs != null) rs.close(); } catch (Exception ignored) {}
-            try { if (stmt != null) stmt.close(); } catch (Exception ignored) {}
-            try { if (conn != null) conn.close(); } catch (Exception ignored) {}
+            System.out.println("Erro listar fornecedores: " + e.getMessage());
         }
 
         return lista;
     }
 
-    // --------------------- DELETAR ------------------------
-    public boolean deletar_fornecedor(int id) {
-        Connection conn = null;
-        CallableStatement stmt = null;
-        try {
-            conn = DAO_Conexao.connect();
+    // --------------------- BUSCAR POR ID ------------------------
+    public Model_Fornecedor_04 buscarFornecedorPorID(int id) {
+        Model_Fornecedor_04 f = new Model_Fornecedor_04();
 
-            stmt = conn.prepareCall("{CALL SP_EXCLUIR_FORNECEDOR_04(?)}");
+        try {
+            Connection conn = DAO_Conexao.connect();
+
+            CallableStatement stmt = conn.prepareCall("{CALL SP_BUSCAR_FORNECEDOR_04(?)}");
             stmt.setInt(1, id);
 
-            stmt.execute();
-            return true;
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+
+                f.setA04_id_fornecedor(rs.getInt("a04_id_fornecedor"));
+                f.setA04_nome(rs.getString("a04_nome"));
+                f.setA04_cnpj(rs.getString("a04_cnpj"));
+                f.setA04_telefone(rs.getString("a04_telefone"));
+                f.setA04_email(rs.getString("a04_email"));
+                f.setA04_endereco(rs.getString("a04_endereco"));
+            }
+
+            rs.close();
+            stmt.close();
+            conn.close();
 
         } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        } finally {
-            try { if (stmt != null) stmt.close(); } catch (Exception ignored) {}
-            try { if (conn != null) conn.close(); } catch (Exception ignored) {}
+            System.out.println("Erro buscar fornecedor por ID: " + e.getMessage());
         }
+
+        return f;
     }
 }
-

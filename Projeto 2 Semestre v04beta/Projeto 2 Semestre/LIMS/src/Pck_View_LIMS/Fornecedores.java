@@ -1,22 +1,22 @@
 package Pck_View_LIMS;
 
+import Pck_Controller_LIMS.Controller_Fornecedor_04;
+import Pck_Model_LIMS.Model_Fornecedor_04;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.*;
 import java.util.ArrayList;
 
-import Pck_Controller_LIMS.Controller_Fornecedor_04;
-import Pck_Model_LIMS.Model_Fornecedor_04;
-
 public class Fornecedores extends JDialog {
 
     private JPanel contentPane;
 
-    private JTextField textField1CNPJ;
-    private JTextField textField2Nome;
-    private JTextField textField3Email;
-    private JTextField textField4Telefone;
-    private JTextField textField5Endereco;
+    private JTextField textField1CNPJ;     // CNPJ
+    private JTextField textField2Nome;     // Nome
+    private JTextField textField3Email;    // Email
+    private JTextField textField4Telefone; // Telefone
+    private JTextField textField5Endereco; // Endereço
 
     private JButton salvarButton;
     private JButton editarButton;
@@ -30,10 +30,11 @@ public class Fornecedores extends JDialog {
     private Controller_Fornecedor_04 controller;
 
     public Fornecedores() {
-
         setContentPane(contentPane);
         setModal(true);
         setTitle("Cadastro de Fornecedores");
+        setSize(800, 500);
+        setLocationRelativeTo(null);
 
         controller = new Controller_Fornecedor_04();
 
@@ -41,12 +42,14 @@ public class Fornecedores extends JDialog {
         preencherTabela();
         adicionarEventoCliqueTabela();
 
+        // listeners
         salvarButton.addActionListener(e -> onSalvar());
         editarButton.addActionListener(e -> onEditar());
         excluirButton.addActionListener(e -> onExcluir());
         buscarButton.addActionListener(e -> onBuscar());
         sairButton.addActionListener(e -> dispose());
 
+        // fechar com ESC
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) { dispose(); }
@@ -60,13 +63,21 @@ public class Fornecedores extends JDialog {
     }
 
     private void inicializarTabela() {
+        // Colunas em ordem conforme seu Model: ID, Nome, CNPJ, Telefone, Email, Endereço
         tableModel = new DefaultTableModel(
-                new Object[]{"ID", "CNPJ", "Nome", "Email", "Telefone", "Endereço"},
+                new Object[]{"ID", "Nome", "CNPJ", "Telefone", "Email", "Endereço"},
                 0
         ) {
+            @Override
             public boolean isCellEditable(int row, int column) { return false; }
         };
+
+        // Proteção caso a JTable não tenha sido criada pelo GUI Designer
+        if (table1Geral == null) {
+            table1Geral = new JTable();
+        }
         table1Geral.setModel(tableModel);
+        table1Geral.setAutoCreateRowSorter(true);
     }
 
     private void preencherTabela() {
@@ -74,23 +85,27 @@ public class Fornecedores extends JDialog {
             tableModel.setRowCount(0);
             ArrayList<Model_Fornecedor_04> lista = controller.listarFornecedores();
 
-            for (Model_Fornecedor_04 f : lista) {
-                tableModel.addRow(new Object[]{
-                        f.getA04_id_fornecedor(),
-                        f.getA04_cnpj_fornecedor(),
-                        f.getA04_nome_fornecedor(),
-                        f.getA04_email_fornecedor(),
-                        f.getA04_telefone_fornecedor(),
-                        f.getA04_endereco_fornecedor()
-                });
+            if (lista != null) {
+                for (Model_Fornecedor_04 f : lista) {
+                    tableModel.addRow(new Object[]{
+                            f.getA04_id_fornecedor(),
+                            f.getA04_nome(),
+                            f.getA04_cnpj(),
+                            f.getA04_telefone(),
+                            f.getA04_email(),
+                            f.getA04_endereco()
+                    });
+                }
             }
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Erro ao preencher tabela: " + e.getMessage());
+            JOptionPane.showMessageDialog(this, "Erro ao preencher tabela: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
         }
     }
 
     private void adicionarEventoCliqueTabela() {
+        if (table1Geral == null) return;
         table1Geral.addMouseListener(new MouseAdapter() {
+            @Override
             public void mouseClicked(MouseEvent e) {
                 int row = table1Geral.getSelectedRow();
                 if (row >= 0) {
@@ -101,31 +116,49 @@ public class Fornecedores extends JDialog {
     }
 
     private void preencherCamposDoClique(int row) {
-        textField1CNPJ.setText(tableModel.getValueAt(row, 1).toString());
-        textField2Nome.setText(tableModel.getValueAt(row, 2).toString());
-        textField3Email.setText(tableModel.getValueAt(row, 3).toString());
-        textField4Telefone.setText(tableModel.getValueAt(row, 4).toString());
-        textField5Endereco.setText(tableModel.getValueAt(row, 5).toString());
+        // índices conforme inicializarTabela(): 0=ID,1=Nome,2=CNPJ,3=Telefone,4=Email,5=Endereço
+        Object nome = tableModel.getValueAt(row, 1);
+        Object cnpj = tableModel.getValueAt(row, 2);
+        Object telefone = tableModel.getValueAt(row, 3);
+        Object email = tableModel.getValueAt(row, 4);
+        Object endereco = tableModel.getValueAt(row, 5);
+
+        textField2Nome.setText(nome != null ? nome.toString() : "");
+        textField1CNPJ.setText(cnpj != null ? cnpj.toString() : "");
+        textField4Telefone.setText(telefone != null ? telefone.toString() : "");
+        textField3Email.setText(email != null ? email.toString() : "");
+        textField5Endereco.setText(endereco != null ? endereco.toString() : "");
     }
 
     private void onSalvar() {
         try {
-            boolean ok = controller.salvarFornecedor(
-                    textField2Nome.getText().trim(),
-                    textField1CNPJ.getText().trim(),
-                    textField4Telefone.getText().trim(),
-                    textField3Email.getText().trim(),
-                    textField5Endereco.getText().trim()
-            );
+            // validação simples
+            String nome = textField2Nome.getText().trim();
+            String cnpj = textField1CNPJ.getText().trim();
+            String telefone = textField4Telefone.getText().trim();
+            String email = textField3Email.getText().trim();
+            String endereco = textField5Endereco.getText().trim();
 
-            if (ok) {
-                JOptionPane.showMessageDialog(null, "Salvo com sucesso!");
-                preencherTabela();
-                limparCampos();
+            if (nome.isEmpty() || cnpj.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Nome e CNPJ são obrigatórios.", "Atenção", JOptionPane.WARNING_MESSAGE);
+                return;
             }
 
+            Model_Fornecedor_04 f = new Model_Fornecedor_04();
+            f.setA04_nome(nome);
+            f.setA04_cnpj(cnpj);
+            f.setA04_telefone(telefone);
+            f.setA04_email(email);
+            f.setA04_endereco(endereco);
+
+            String resultado = controller.salvarFornecedor(f);
+            JOptionPane.showMessageDialog(this, resultado);
+
+            preencherTabela();
+            limparCampos();
+
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Erro ao salvar: " + e.getMessage());
+            JOptionPane.showMessageDialog(this, "Erro ao salvar: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -133,29 +166,43 @@ public class Fornecedores extends JDialog {
         try {
             int linha = table1Geral.getSelectedRow();
             if (linha < 0) {
-                JOptionPane.showMessageDialog(null, "Selecione um registro.");
+                JOptionPane.showMessageDialog(this, "Selecione um registro para editar.", "Atenção", JOptionPane.WARNING_MESSAGE);
                 return;
             }
 
-            int id = (int) tableModel.getValueAt(linha, 0);
+            // pega o ID da tabela (coluna 0)
+            Object idObj = tableModel.getValueAt(linha, 0);
+            int id = Integer.parseInt(idObj.toString());
 
-            boolean ok = controller.editarFornecedor(
-                    id,
-                    textField2Nome.getText().trim(),
-                    textField1CNPJ.getText().trim(),
-                    textField4Telefone.getText().trim(),
-                    textField3Email.getText().trim(),
-                    textField5Endereco.getText().trim()
-            );
+            String nome = textField2Nome.getText().trim();
+            String cnpj = textField1CNPJ.getText().trim();
+            String telefone = textField4Telefone.getText().trim();
+            String email = textField3Email.getText().trim();
+            String endereco = textField5Endereco.getText().trim();
 
-            if (ok) {
-                JOptionPane.showMessageDialog(null, "Editado!");
-                preencherTabela();
-                limparCampos();
+            if (nome.isEmpty() || cnpj.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Nome e CNPJ são obrigatórios.", "Atenção", JOptionPane.WARNING_MESSAGE);
+                return;
             }
 
+            Model_Fornecedor_04 f = new Model_Fornecedor_04();
+            f.setA04_id_fornecedor(id);
+            f.setA04_nome(nome);
+            f.setA04_cnpj(cnpj);
+            f.setA04_telefone(telefone);
+            f.setA04_email(email);
+            f.setA04_endereco(endereco);
+
+            String resultado = controller.atualizarFornecedor(f);
+            JOptionPane.showMessageDialog(this, resultado);
+
+            preencherTabela();
+            limparCampos();
+
+        } catch (NumberFormatException nfe) {
+            JOptionPane.showMessageDialog(this, "ID inválido.", "Erro", JOptionPane.ERROR_MESSAGE);
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Erro ao editar: " + e.getMessage());
+            JOptionPane.showMessageDialog(this, "Erro ao editar: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -163,61 +210,71 @@ public class Fornecedores extends JDialog {
         try {
             int linha = table1Geral.getSelectedRow();
             if (linha < 0) {
-                JOptionPane.showMessageDialog(null, "Selecione um registro.");
+                JOptionPane.showMessageDialog(this, "Selecione um registro para excluir.", "Atenção", JOptionPane.WARNING_MESSAGE);
                 return;
             }
 
-            int id = (int) tableModel.getValueAt(linha, 0);
+            Object idObj = tableModel.getValueAt(linha, 0);
+            int id = Integer.parseInt(idObj.toString());
 
-            if (JOptionPane.showConfirmDialog(null, "Excluir fornecedor?", "Confirmar",
-                    JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+            int resp = JOptionPane.showConfirmDialog(this, "Excluir fornecedor?", "Confirmar", JOptionPane.YES_NO_OPTION);
+            if (resp != JOptionPane.YES_OPTION) return;
 
-                boolean ok = controller.excluirFornecedor(id);
+            String resultado = controller.excluirFornecedor(id);
+            JOptionPane.showMessageDialog(this, resultado);
 
-                if (ok) {
-                    JOptionPane.showMessageDialog(null, "Excluído!");
-                    preencherTabela();
-                    limparCampos();
-                }
-            }
+            preencherTabela();
+            limparCampos();
+
+        } catch (NumberFormatException nfe) {
+            JOptionPane.showMessageDialog(this, "ID inválido.", "Erro", JOptionPane.ERROR_MESSAGE);
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Erro ao excluir: " + e.getMessage());
+            JOptionPane.showMessageDialog(this, "Erro ao excluir: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
         }
     }
 
     private void onBuscar() {
         try {
-            String s = JOptionPane.showInputDialog("ID para buscar:");
-            if (s == null || s.isEmpty()) return;
+            String s = JOptionPane.showInputDialog(this, "ID para buscar:");
+            if (s == null || s.trim().isEmpty()) return;
 
-            int id = Integer.parseInt(s);
+            int id = Integer.parseInt(s.trim());
 
-            Model_Fornecedor_04 f = controller.buscarFornecedor(id);
-
-            if (f == null) {
-                JOptionPane.showMessageDialog(null, "Não encontrado.");
+            Model_Fornecedor_04 f = controller.buscarFornecedorPorID(id);
+            if (f == null || f.getA04_id_fornecedor() == 0) {
+                JOptionPane.showMessageDialog(this, "Não encontrado.");
                 return;
             }
 
-            textField1CNPJ.setText(f.getA04_cnpj_fornecedor());
-            textField2Nome.setText(f.getA04_nome_fornecedor());
-            textField3Email.setText(f.getA04_email_fornecedor());
-            textField4Telefone.setText(f.getA04_telefone_fornecedor());
-            textField5Endereco.setText(f.getA04_endereco_fornecedor());
+            // preenche campos
+            textField2Nome.setText(f.getA04_nome());
+            textField1CNPJ.setText(f.getA04_cnpj());
+            textField4Telefone.setText(f.getA04_telefone());
+            textField3Email.setText(f.getA04_email());
+            textField5Endereco.setText(f.getA04_endereco());
 
+            // seleciona na tabela
             selecionarNaTabela(id);
 
+        } catch (NumberFormatException nfe) {
+            JOptionPane.showMessageDialog(this, "ID inválido.", "Erro", JOptionPane.ERROR_MESSAGE);
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Erro ao buscar: " + e.getMessage());
+            JOptionPane.showMessageDialog(this, "Erro ao buscar: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
         }
     }
 
     private void selecionarNaTabela(int id) {
         for (int i = 0; i < tableModel.getRowCount(); i++) {
-            if ((int) tableModel.getValueAt(i, 0) == id) {
-                table1Geral.setRowSelectionInterval(i, i);
-                table1Geral.scrollRectToVisible(table1Geral.getCellRect(i, 0, true));
-                break;
+            Object idObj = tableModel.getValueAt(i, 0);
+            if (idObj != null) {
+                try {
+                    int idTabela = Integer.parseInt(idObj.toString());
+                    if (idTabela == id) {
+                        table1Geral.setRowSelectionInterval(i, i);
+                        table1Geral.scrollRectToVisible(table1Geral.getCellRect(i, 0, true));
+                        break;
+                    }
+                } catch (NumberFormatException ignored) {}
             }
         }
     }
