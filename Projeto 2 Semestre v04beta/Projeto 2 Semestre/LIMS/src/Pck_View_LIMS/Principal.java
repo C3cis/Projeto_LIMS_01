@@ -19,6 +19,7 @@ public class Principal extends JDialog {
     private JButton vizualizarDadosButton;
     private JButton manutençãoButton;
     private JButton estoqueButton;
+    private JButton localizaçãoButton;
 
     private Model_Usuario_11 usuarioLogado;
 
@@ -41,6 +42,7 @@ public class Principal extends JDialog {
         vizualizarDadosButton.addActionListener(e -> abrirTela(new VisualizarDados()));
         manutençãoButton.addActionListener(e -> abrirTela(new Manutencao()));
         estoqueButton.addActionListener(e -> abrirTela(new Estoque()));
+        localizaçãoButton.addActionListener(e -> abrirTela(new Localizacao()));
 
 
         contentPane.registerKeyboardAction(e -> dispose(),
@@ -64,6 +66,8 @@ public class Principal extends JDialog {
             produtosButton.setVisible(false);
             pedidosButton.setVisible(false);
             estoqueButton.setVisible(false);
+            localizaçãoButton.setVisible(false);
+
 
         }
     }
