@@ -10,21 +10,23 @@ import Pck_Model_LIMS.Model_Manutencao_05;
 public class Manutencao extends JDialog {
     private JPanel contentPane;
     private JLabel nomeLabel;
-    private JTextField textField2;    // data manutencao (text)
+    private JTextField textField2;
     private JLabel descricaoLabel;
-    private JEditorPane editorPane1;  // descrição do problema
+    private JEditorPane editorPane1;
     private JLabel dataInicialLabel;
-    private JTextField textField1;    // id manutencao
-    private JComboBox comboBox1;      // status_resultado
-    private JComboBox comboBox2;      // id_produto (popule com IDs)
-    private JTextField textField5;    // tipo de manutencao
+    private JTextField textField1;
+    private JComboBox comboBox1;
+    private JComboBox comboBox2;
+    private JTextField textField5;
     private JButton salvarButton;
     private JButton editarButton;
     private JButton excluirButton;
     private JButton buscarButton;
     private JTable table1;
     private JButton sairButton;
-    private JEditorPane editorPane2;  // relatorio
+    private JEditorPane editorPane2;
+    private JComboBox comboBox4;
+    private JComboBox comboBox5;
 
     private Controller_Manutencao_05 controller = new Controller_Manutencao_05();
 
