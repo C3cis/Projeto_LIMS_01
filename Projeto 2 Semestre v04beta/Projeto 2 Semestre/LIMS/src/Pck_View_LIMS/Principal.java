@@ -39,7 +39,7 @@ public class Principal extends JDialog {
         pedidosButton.addActionListener(e -> abrirTela(new Pedidos()));
         relatoriosButton.addActionListener(e -> abrirTela(new Relatorios()));
         fornecedoresButton.addActionListener(e -> abrirTela(new Fornecedores()));
-        vizualizarDadosButton.addActionListener(e -> abrirTela(new VisualizarDados()));
+        vizualizarDadosButton.addActionListener(e -> abrirTela(new Visualizar_Dados()));
         manutençãoButton.addActionListener(e -> abrirTela(new Manutencao()));
         estoqueButton.addActionListener(e -> abrirTela(new Estoque()));
         localizaçãoButton.addActionListener(e -> abrirTela(new Localizacao()));

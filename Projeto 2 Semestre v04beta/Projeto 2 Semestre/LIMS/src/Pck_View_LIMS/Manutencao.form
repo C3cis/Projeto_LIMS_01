@@ -24,16 +24,6 @@
               <text value="ID Produto"/>
             </properties>
           </component>
-          <component id="77d10" class="javax.swing.JTextField" binding="textField2ID_Manutencao">
-            <constraints>
-              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
-                <preferred-size width="150" height="-1"/>
-              </grid>
-            </constraints>
-            <properties>
-              <text value=""/>
-            </properties>
-          </component>
           <component id="f38d8" class="javax.swing.JLabel" binding="descricaoLabel">
             <constraints>
               <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
@@ -42,7 +32,7 @@
               <text value="Descrição do Problema"/>
             </properties>
           </component>
-          <component id="b8ab3" class="javax.swing.JEditorPane" binding="editorPane1" default-binding="true">
+          <component id="b8ab3" class="javax.swing.JEditorPane" binding="editorPane1Descricao">
             <constraints>
               <grid row="5" column="1" row-span="1" col-span="29" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
                 <preferred-size width="150" height="50"/>
@@ -58,7 +48,7 @@
               <text value="Tipo de Manutenção"/>
             </properties>
           </component>
-          <component id="65341" class="javax.swing.JTextField" binding="textField5" default-binding="true">
+          <component id="65341" class="javax.swing.JTextField" binding="textField5TipoManutencao">
             <constraints>
               <grid row="4" column="1" row-span="1" col-span="29" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
                 <preferred-size width="150" height="-1"/>
@@ -74,7 +64,7 @@
               <text value="Relatorio "/>
             </properties>
           </component>
-          <component id="58d5a" class="javax.swing.JEditorPane" binding="editorPane2" default-binding="true">
+          <component id="58d5a" class="javax.swing.JEditorPane" binding="editorPane2Relatorio">
             <constraints>
               <grid row="6" column="1" row-span="1" col-span="29" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
                 <preferred-size width="150" height="50"/>
@@ -82,7 +72,7 @@
             </constraints>
             <properties/>
           </component>
-          <component id="3e4fa" class="javax.swing.JComboBox" binding="comboBox5" default-binding="true">
+          <component id="3e4fa" class="javax.swing.JComboBox" binding="comboBox5ID_Localizacao">
             <constraints>
               <grid row="0" column="4" row-span="1" col-span="26" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
             </constraints>
@@ -96,7 +86,7 @@
               <text value="Status "/>
             </properties>
           </component>
-          <component id="55616" class="javax.swing.JComboBox" binding="comboBox1" default-binding="true">
+          <component id="55616" class="javax.swing.JComboBox" binding="comboBox1">
             <constraints>
               <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
             </constraints>
@@ -118,13 +108,13 @@
               <text value="ID Projeto"/>
             </properties>
           </component>
-          <component id="c3c29" class="javax.swing.JComboBox" binding="comboBox2" default-binding="true">
+          <component id="c3c29" class="javax.swing.JComboBox" binding="comboBox2ID_Projeto">
             <constraints>
               <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties/>
           </component>
-          <component id="aacaa" class="javax.swing.JTextField" binding="textField1" default-binding="true">
+          <component id="aacaa" class="javax.swing.JTextField" binding="textField1Data_Geracao">
             <constraints>
               <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
                 <preferred-size width="150" height="-1"/>
@@ -148,9 +138,15 @@
               <text value="ID Usuario"/>
             </properties>
           </component>
-          <component id="7868b" class="javax.swing.JComboBox" binding="comboBox4" default-binding="true">
+          <component id="7868b" class="javax.swing.JComboBox" binding="comboBox4ID_Usuario">
             <constraints>
               <grid row="3" column="4" row-span="1" col-span="26" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties/>
+          </component>
+          <component id="193de" class="javax.swing.JComboBox" binding="comboBox3ID_Produto">
+            <constraints>
+              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties/>
           </component>
