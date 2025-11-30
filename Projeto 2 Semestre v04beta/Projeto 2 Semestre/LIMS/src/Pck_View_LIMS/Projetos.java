@@ -23,7 +23,6 @@ public class Projetos extends JDialog {
     private JTextField textField1dataIni;
     private JTextField txtDataFinal;
     private JTextField txtOrcamento;
-    private JTextField textBuscar;
 
 
     private JLabel txtDescricao;
