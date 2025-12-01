@@ -60,8 +60,6 @@ public class Estoque extends JDialog {
                 dispose();
             }
         });
-
-        // ✅ Evento correto para pegar dados da tabela
         table1.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseClicked(java.awt.event.MouseEvent e) {
@@ -69,10 +67,6 @@ public class Estoque extends JDialog {
             }
         });
     }
-
-    // ===========================================================
-    // CONFIGURAÇÃO DA TABELA
-    // ===========================================================
     private void configurarTabela(){
         table1.setModel(new DefaultTableModel(
                 new Object[][]{},
@@ -90,10 +84,6 @@ public class Estoque extends JDialog {
             e.printStackTrace();
         }
     }
-
-    // ===========================================================
-    // COMBOS
-    // ===========================================================
     private void carregarCombos() {
 
         // PRODUTOS
@@ -112,7 +102,6 @@ public class Estoque extends JDialog {
             JOptionPane.showMessageDialog(this, "Erro combo produtos: " + e.getMessage());
         }
 
-        // LOCAIS
         try (Connection c = DAO_Conexao.connect();
              PreparedStatement ps = c.prepareStatement(
                      "SELECT A07_ID_LOCALIZACAO, A07_IDENTIFICACAO FROM LOCALIZACAO_07 ORDER BY A07_IDENTIFICACAO");
@@ -143,10 +132,6 @@ public class Estoque extends JDialog {
             }
         }
     }
-
-    // ===========================================================
-    // DATA
-    // ===========================================================
     private Date pegarData() throws Exception {
 
         String dataTexto = textField2DATA_ENTRADA.getText().trim();
@@ -159,9 +144,6 @@ public class Estoque extends JDialog {
         return java.sql.Date.valueOf(dataBanco);
     }
 
-    // ===========================================================
-    // BOTÕES
-    // ===========================================================
     private void onSalvar() {
 
         try {
@@ -173,7 +155,7 @@ public class Estoque extends JDialog {
             m.setA06_id_localizacao(pegarIdCombo(comboBox2LOCAL));
 
             if (controller.inserirEstoque(m)) {
-                JOptionPane.showMessageDialog(this,"✅ Registro salvo!");
+                JOptionPane.showMessageDialog(this,"Cadastro salvo!");
                 limparCampos();
                 preencherTabela();
             }
@@ -205,7 +187,7 @@ public class Estoque extends JDialog {
             m.setA06_id_localizacao(pegarIdCombo(comboBox2LOCAL));
 
             if (controller.atualizarEstoque(m)) {
-                JOptionPane.showMessageDialog(this, "✅ Atualizado!");
+                JOptionPane.showMessageDialog(this, "Atualizado!");
                 limparCampos();
                 preencherTabela();
             }
@@ -235,7 +217,7 @@ public class Estoque extends JDialog {
 
             if (resp == JOptionPane.YES_OPTION) {
                 if (controller.excluirEstoque(id)) {
-                    JOptionPane.showMessageDialog(this, "✅ Excluído!");
+                    JOptionPane.showMessageDialog(this, "Excluído!");
                     limparCampos();
                     preencherTabela();
                 }
@@ -249,7 +231,6 @@ public class Estoque extends JDialog {
         try {
             String s = JOptionPane.showInputDialog(this, "ID do estoque:");
 
-            // usuário cancelou ou deixou vazio -> nada a fazer
             if (s == null) return;
             s = s.trim();
             if (s.isEmpty()) return;
@@ -262,8 +243,6 @@ public class Estoque extends JDialog {
                 JOptionPane.showMessageDialog(this, "Registro não encontrado.");
                 return;
             }
-
-            // limpa e mostra só o registro encontrado
             DefaultTableModel modelo = (DefaultTableModel) table1.getModel();
             modelo.setRowCount(0);
             inserirLinhaTabela(m);
@@ -274,10 +253,6 @@ public class Estoque extends JDialog {
             JOptionPane.showMessageDialog(this, "Erro ao buscar: " + e.getMessage());
         }
     }
-
-    // ===========================================================
-    // TABELA
-    // ===========================================================
     private void preencherTabela() {
 
         DefaultTableModel modelo = (DefaultTableModel) table1.getModel();
@@ -334,9 +309,6 @@ public class Estoque extends JDialog {
         selecionarCombo(comboBox1ID_Produto, Integer.parseInt(prod.split(" - ")[0]));
         selecionarCombo(comboBox2LOCAL, Integer.parseInt(local.split(" - ")[0]));
     }
-    // ===========================================================
-    // BUSCAS AUXILIARES
-    // ===========================================================
     private String buscarNomeProduto(int id) {
 
         String sql = "SELECT A02_NOME_PRODUTO FROM PRODUTO_02 WHERE A02_ID_PRODUTO = ?";
@@ -380,10 +352,6 @@ public class Estoque extends JDialog {
 
         return String.valueOf(id);
     }
-
-    // ===========================================================
-    // LIMPEZA
-    // ===========================================================
     private void limparCampos() {
 
         textField2DATA_ENTRADA.setText("");

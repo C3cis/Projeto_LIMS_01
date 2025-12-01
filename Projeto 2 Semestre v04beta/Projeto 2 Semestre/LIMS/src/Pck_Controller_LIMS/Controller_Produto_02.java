@@ -13,10 +13,6 @@ public class Controller_Produto_02 {
     public Controller_Produto_02(Connection conexao) {
         this.persistencia = new Persistencia_Produto_02(conexao);
     }
-
-    // ------------------------------------------------------------
-    // INSERIR
-    // ------------------------------------------------------------
     public boolean inserirProduto(
             String nome,
             String descricao,
@@ -47,10 +43,6 @@ public class Controller_Produto_02 {
             return false;
         }
     }
-
-    // ------------------------------------------------------------
-    // ATUALIZAR
-    // ------------------------------------------------------------
     public boolean atualizarProduto(
             int idProduto,
             String nome,
@@ -83,24 +75,12 @@ public class Controller_Produto_02 {
             return false;
         }
     }
-
-    // ------------------------------------------------------------
-    // EXCLUIR
-    // ------------------------------------------------------------
     public boolean excluirProduto(int idProduto) {
         return persistencia.excluirProduto(idProduto);
     }
-
-    // ------------------------------------------------------------
-    // BUSCAR POR ID
-    // ------------------------------------------------------------
     public Model_Produto_02 buscarProduto(int idProduto) {
         return persistencia.buscarProduto(idProduto);
     }
-
-    // ------------------------------------------------------------
-    // LISTAR TODOS
-    // ------------------------------------------------------------
     public ArrayList<Model_Produto_02> listarProdutos() {
         return persistencia.listarProdutos();
     }

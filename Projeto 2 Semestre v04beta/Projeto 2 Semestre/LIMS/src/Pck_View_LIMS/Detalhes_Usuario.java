@@ -57,7 +57,6 @@ public class Detalhes_Usuario extends JDialog {
         JScrollPane scrollPane = new JScrollPane(tableDetalhes);
         contentPane.add(scrollPane, BorderLayout.CENTER);
 
-        // Botão fechar
         JButton btnFechar = new JButton("Fechar");
         btnFechar.addActionListener(e -> dispose());
         JPanel painelBotoes = new JPanel(new FlowLayout(FlowLayout.RIGHT));
@@ -67,14 +66,11 @@ public class Detalhes_Usuario extends JDialog {
 
     private void carregarDetalhes(Model_Visualizar_Dados registro) {
         try {
-            // Buscar detalhes do projeto e do produto
             Model_Projeto_01 projeto = persistenciaProjeto.buscar_projeto(registro.getIdProjeto());
             Model_Produto_02 produto = persistenciaProduto.buscarProduto(registro.getIdProduto());
 
-            // Limpar tabela
             tableModel.setRowCount(0);
 
-            // Adicionar linha com todos os detalhes
             tableModel.addRow(new Object[]{
                     projeto.getA01_id_projeto(), projeto.getA01_nome_projeto(), projeto.getA01_descricao(),
                     produto.getA02_id_produto(), produto.getA02_nome_produto(), produto.getA02_descricao(),

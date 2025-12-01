@@ -42,15 +42,13 @@ public class Fornecedores extends JDialog {
         preencherTabela();
         adicionarEventoCliqueTabela();
 
-        // listeners
         salvarButton.addActionListener(e -> onSalvar());
         editarButton.addActionListener(e -> onEditar());
         excluirButton.addActionListener(e -> onExcluir());
         buscarButton.addActionListener(e -> onBuscar());
         sairButton.addActionListener(e -> dispose());
 
-        // fechar com ESC
-        setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) { dispose(); }
         });
@@ -63,7 +61,6 @@ public class Fornecedores extends JDialog {
     }
 
     private void inicializarTabela() {
-        // Colunas em ordem conforme seu Model: ID, Nome, CNPJ, Telefone, Email, Endereço
         tableModel = new DefaultTableModel(
                 new Object[]{"ID", "Nome", "CNPJ", "Telefone", "Email", "Endereço"},
                 0
@@ -71,8 +68,6 @@ public class Fornecedores extends JDialog {
             @Override
             public boolean isCellEditable(int row, int column) { return false; }
         };
-
-        // Proteção caso a JTable não tenha sido criada pelo GUI Designer
         if (table1Geral == null) {
             table1Geral = new JTable();
         }
@@ -116,7 +111,6 @@ public class Fornecedores extends JDialog {
     }
 
     private void preencherCamposDoClique(int row) {
-        // índices conforme inicializarTabela(): 0=ID,1=Nome,2=CNPJ,3=Telefone,4=Email,5=Endereço
         Object nome = tableModel.getValueAt(row, 1);
         Object cnpj = tableModel.getValueAt(row, 2);
         Object telefone = tableModel.getValueAt(row, 3);
@@ -132,7 +126,6 @@ public class Fornecedores extends JDialog {
 
     private void onSalvar() {
         try {
-            // validação simples
             String nome = textField2Nome.getText().trim();
             String cnpj = textField1CNPJ.getText().trim();
             String telefone = textField4Telefone.getText().trim();
@@ -245,15 +238,12 @@ public class Fornecedores extends JDialog {
                 JOptionPane.showMessageDialog(this, "Não encontrado.");
                 return;
             }
-
-            // preenche campos
             textField2Nome.setText(f.getA04_nome());
             textField1CNPJ.setText(f.getA04_cnpj());
             textField4Telefone.setText(f.getA04_telefone());
             textField3Email.setText(f.getA04_email());
             textField5Endereco.setText(f.getA04_endereco());
 
-            // seleciona na tabela
             selecionarNaTabela(id);
 
         } catch (NumberFormatException nfe) {

@@ -18,16 +18,12 @@ public class Persistencia_Relatorio_08 {
             e.printStackTrace();
         }
     }
-
-    // -----------------------------------
-    // INSERT
-    // -----------------------------------
     public boolean inserir(Model_Relatorio_08 m) {
         try {
             CallableStatement cs = conn.prepareCall("{CALL SP_INSERIR_RELATORIO_08(?,?,?,?,?)}");
 
             cs.setString(1, m.getA08_titulo());
-            cs.setDate(2, m.getA08_data_geracao());      // <-- CORRIGIDO (DATE)
+            cs.setDate(2, m.getA08_data_geracao());
             cs.setString(3, m.getA08_conteudo());
             cs.setInt(4, m.getA08_id_usuario());
             cs.setInt(5, m.getA08_id_projeto());
@@ -40,17 +36,13 @@ public class Persistencia_Relatorio_08 {
             return false;
         }
     }
-
-    // -----------------------------------
-    // UPDATE
-    // -----------------------------------
     public boolean atualizar(Model_Relatorio_08 m) {
         try {
             CallableStatement cs = conn.prepareCall("{CALL SP_ATUALIZAR_RELATORIO_08(?,?,?,?,?,?)}");
 
             cs.setInt(1, m.getA08_id_relatorio());
             cs.setString(2, m.getA08_titulo());
-            cs.setDate(3, m.getA08_data_geracao());      // <-- CORRIGIDO (DATE)
+            cs.setDate(3, m.getA08_data_geracao());
             cs.setString(4, m.getA08_conteudo());
             cs.setInt(5, m.getA08_id_usuario());
             cs.setInt(6, m.getA08_id_projeto());
@@ -64,9 +56,6 @@ public class Persistencia_Relatorio_08 {
         }
     }
 
-    // -----------------------------------
-    // DELETE
-    // -----------------------------------
     public boolean excluir(int id) {
         try {
             CallableStatement cs = conn.prepareCall("{CALL SP_EXCLUIR_RELATORIO_08(?)}");
@@ -79,10 +68,6 @@ public class Persistencia_Relatorio_08 {
             return false;
         }
     }
-
-    // -----------------------------------
-    // BUSCAR POR ID
-    // -----------------------------------
     public Model_Relatorio_08 buscar(int id) {
         try {
             CallableStatement cs = conn.prepareCall("{CALL SP_BUSCAR_RELATORIO_08(?)}");
@@ -107,10 +92,6 @@ public class Persistencia_Relatorio_08 {
             return null;
         }
     }
-
-    // -----------------------------------
-    // LISTAR TODOS
-    // -----------------------------------
     public List<Model_Relatorio_08> listar() {
 
         List<Model_Relatorio_08> lista = new ArrayList<>();

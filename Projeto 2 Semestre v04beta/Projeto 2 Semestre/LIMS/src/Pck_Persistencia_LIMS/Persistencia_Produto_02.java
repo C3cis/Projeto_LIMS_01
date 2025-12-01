@@ -11,10 +11,6 @@ public class Persistencia_Produto_02 {
     public Persistencia_Produto_02(Connection conexao) {
         this.conexao = conexao;
     }
-
-    // ------------------------------------------------------------
-    // INSERIR
-    // ------------------------------------------------------------
     public boolean inserirProduto(Model_Produto_02 produto) {
         String sql = "{ CALL SP_INSERIR_PRODUTO_02(?, ?, ?, ?, ?, ?, ?, ?) }";
 
@@ -37,10 +33,6 @@ public class Persistencia_Produto_02 {
             return false;
         }
     }
-
-    // ------------------------------------------------------------
-    // ATUALIZAR
-    // ------------------------------------------------------------
     public boolean atualizarProduto(Model_Produto_02 produto) {
         String sql = "{ CALL SP_ATUALIZAR_PRODUTO_02(?, ?, ?, ?, ?, ?, ?, ?, ?) }";
 
@@ -64,10 +56,6 @@ public class Persistencia_Produto_02 {
             return false;
         }
     }
-
-    // ------------------------------------------------------------
-    // EXCLUIR
-    // ------------------------------------------------------------
     public boolean excluirProduto(int idProduto) {
         String sql = "{ CALL SP_EXCLUIR_PRODUTO_02(?) }";
 
@@ -82,10 +70,6 @@ public class Persistencia_Produto_02 {
             return false;
         }
     }
-
-    // ------------------------------------------------------------
-    // BUSCAR POR ID
-    // ------------------------------------------------------------
     public Model_Produto_02 buscarProduto(int idProduto) {
         String sql = "{ CALL SP_BUSCAR_PRODUTO_02(?) }";
 
@@ -116,10 +100,6 @@ public class Persistencia_Produto_02 {
 
         return null;
     }
-
-    // ------------------------------------------------------------
-    // LISTAR TODOS
-    // ------------------------------------------------------------
     public ArrayList<Model_Produto_02> listarProdutos() {
         ArrayList<Model_Produto_02> lista = new ArrayList<>();
 

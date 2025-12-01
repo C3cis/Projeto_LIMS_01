@@ -10,27 +10,16 @@ public class Persistencia_Usuario_11 {
     private Connection conec;
     private CallableStatement preparedState;
 
-    // ============================================================
-    // ABRIR CONEXÃO
-    // ============================================================
     private void abrir() throws SQLException {
         conec = DAO_Conexao.connect();
         if (conec == null) {
             throw new SQLException("Falha ao conectar: conec == null.");
         }
     }
-
-    // ============================================================
-    // FECHAR CONEXÃO
-    // ============================================================
     private void fechar() {
         try { if (preparedState != null) preparedState.close(); } catch (Exception ignored) {}
         try { if (conec != null) conec.close(); } catch (Exception ignored) {}
     }
-
-    // ============================================================
-    // INSERIR
-    // ============================================================
     public boolean inserir(Model_Usuario_11 u) {
         try {
             abrir();
@@ -54,10 +43,6 @@ public class Persistencia_Usuario_11 {
             fechar();
         }
     }
-
-    // ============================================================
-    // ATUALIZAR
-    // ============================================================
     public boolean atualizar(Model_Usuario_11 u) {
         try {
             abrir();
@@ -81,10 +66,6 @@ public class Persistencia_Usuario_11 {
             fechar();
         }
     }
-
-    // ============================================================
-    // EXCLUIR
-    // ============================================================
     public boolean excluir(int id) {
         try {
             abrir();
@@ -102,10 +83,6 @@ public class Persistencia_Usuario_11 {
             fechar();
         }
     }
-
-    // ============================================================
-    // BUSCAR
-    // ============================================================
     public Model_Usuario_11 buscar(int id) {
 
         ResultSet rs = null;
@@ -139,10 +116,6 @@ public class Persistencia_Usuario_11 {
 
         return u;
     }
-
-    // ============================================================
-    // LISTAR
-    // ============================================================
     public ArrayList<Model_Usuario_11> listar() {
 
         ArrayList<Model_Usuario_11> lista = new ArrayList<>();
@@ -177,10 +150,6 @@ public class Persistencia_Usuario_11 {
 
         return lista;
     }
-
-    // ============================================================
-    // LOGIN
-    // ============================================================
     public Model_Usuario_11 login(String email, String senha) {
 
         ResultSet rs = null;

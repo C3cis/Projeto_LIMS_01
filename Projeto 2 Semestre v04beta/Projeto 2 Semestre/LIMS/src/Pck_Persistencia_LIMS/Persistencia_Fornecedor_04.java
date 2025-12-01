@@ -10,7 +10,6 @@ import java.util.ArrayList;
 
 public class Persistencia_Fornecedor_04 {
 
-    // --------------------- INSERT ------------------------
     public boolean salvarFornecedor(Model_Fornecedor_04 fornecedor) {
         try {
             Connection conn = DAO_Conexao.connect();
@@ -32,8 +31,6 @@ public class Persistencia_Fornecedor_04 {
             return false;
         }
     }
-
-    // --------------------- UPDATE ------------------------
     public boolean atualizarFornecedor(Model_Fornecedor_04 fornecedor) {
         try {
             Connection conn = DAO_Conexao.connect();
@@ -56,8 +53,6 @@ public class Persistencia_Fornecedor_04 {
             return false;
         }
     }
-
-    // --------------------- DELETE ------------------------
     public boolean excluirFornecedor(int id) {
         try {
             Connection conn = DAO_Conexao.connect();
@@ -76,7 +71,6 @@ public class Persistencia_Fornecedor_04 {
         }
     }
 
-    // --------------------- LISTAR TODOS ------------------------
     public ArrayList<Model_Fornecedor_04> listarFornecedores() {
         ArrayList<Model_Fornecedor_04> lista = new ArrayList<>();
 
@@ -111,8 +105,6 @@ public class Persistencia_Fornecedor_04 {
 
         return lista;
     }
-
-    // --------------------- BUSCAR POR ID ------------------------
     public Model_Fornecedor_04 buscarFornecedorPorID(int id) {
         Model_Fornecedor_04 f = new Model_Fornecedor_04();
 

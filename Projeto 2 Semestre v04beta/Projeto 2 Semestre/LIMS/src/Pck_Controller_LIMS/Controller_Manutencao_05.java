@@ -8,6 +8,7 @@ public class Controller_Manutencao_05 {
     private Persistencia_Manutencao_05 persistencia = new Persistencia_Manutencao_05();
 
     public boolean inserir_manutencao(Model_Manutencao_05 m) {
+
         return persistencia.inserir_manutencao(m);
     }
 

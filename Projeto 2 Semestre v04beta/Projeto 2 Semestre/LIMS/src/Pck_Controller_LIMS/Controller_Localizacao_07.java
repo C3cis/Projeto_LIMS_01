@@ -7,9 +7,6 @@ import Pck_Persistencia_LIMS.Persistencia_Localizacao_07;
 
 import java.util.List;
 
-/**
- * Controller alinhado aos nomes e métodos da Persistencia_Localizacao_07
- */
 public class Controller_Localizacao_07 {
 
     private Persistencia_Localizacao_07 persistencia;

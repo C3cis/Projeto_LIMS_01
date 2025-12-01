@@ -9,9 +9,6 @@ import java.util.List;
 
 public class Persistencia_Localizacao_07 {
 
-    // -------------------------
-    // INSERIR
-    // -------------------------
     public boolean inserirLocalizacao(Model_Localizacao_07 m) {
         try (Connection conn = DAO_Conexao.connect();
              CallableStatement cs = conn.prepareCall("{CALL SP_INSERIR_LOCALIZACAO_07(?, ?, ?)}")) {
@@ -28,10 +25,6 @@ public class Persistencia_Localizacao_07 {
             return false;
         }
     }
-
-    // -------------------------
-    // ATUALIZAR
-    // -------------------------
     public boolean atualizarLocalizacao(Model_Localizacao_07 m) {
         try (Connection conn = DAO_Conexao.connect();
              CallableStatement cs = conn.prepareCall("{CALL SP_ATUALIZAR_LOCALIZACAO_07(?, ?, ?, ?)}")) {
@@ -49,10 +42,6 @@ public class Persistencia_Localizacao_07 {
             return false;
         }
     }
-
-    // -------------------------
-    // EXCLUIR
-    // -------------------------
     public boolean excluirLocalizacao(int id) {
         try (Connection conn = DAO_Conexao.connect();
              CallableStatement cs = conn.prepareCall("{CALL SP_EXCLUIR_LOCALIZACAO_07(?)}")) {
@@ -66,10 +55,6 @@ public class Persistencia_Localizacao_07 {
             return false;
         }
     }
-
-    // -------------------------
-    // BUSCAR POR ID
-    // -------------------------
     public Model_Localizacao_07 buscarLocalizacao(int id) {
         try (Connection conn = DAO_Conexao.connect();
              CallableStatement cs = conn.prepareCall("{CALL SP_BUSCAR_LOCALIZACAO_07(?)}")) {
@@ -92,10 +77,6 @@ public class Persistencia_Localizacao_07 {
             return null;
         }
     }
-
-    // -------------------------
-    // LISTAR TODOS
-    // -------------------------
     public List<Model_Localizacao_07> listarLocalizacoes() {
         List<Model_Localizacao_07> lista = new ArrayList<>();
 

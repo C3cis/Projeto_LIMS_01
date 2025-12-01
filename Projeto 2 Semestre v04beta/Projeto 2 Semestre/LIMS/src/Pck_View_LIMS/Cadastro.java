@@ -199,37 +199,6 @@ public class Cadastro extends JDialog {
             });
         }
     }
-
-    /*private void buscarPorTexto() {
-        String termo = txtBuscar.getText().trim().toLowerCase();
-        if (termo.isEmpty()) {
-            carregarTabela();
-            return;
-        }
-
-        Persistencia_Usuario_11 dao = new Persistencia_Usuario_11();
-        ArrayList<Model_Usuario_11> lista = dao.listar();
-
-        DefaultTableModel modelo = (DefaultTableModel) jTablMostrarUsu.getModel();
-        modelo.setRowCount(0);
-
-        for (Model_Usuario_11 u : lista) {
-            String nome = u.getA11_nome() != null ? u.getA11_nome().toLowerCase() : "";
-            String email = u.getA11_email() != null ? u.getA11_email().toLowerCase() : "";
-
-            if (nome.contains(termo) || email.contains(termo)) {
-                modelo.addRow(new Object[]{
-                        u.getA11_id_usuario(),
-                        u.getA11_nome(),
-                        u.getA11_email(),
-                        u.getA11_cargo(),
-                        u.getA11_senha(),
-                        u.getA11_status_usuario(),
-                        u.getA11_codigo_usuario()
-                });
-            }
-        }
-    }*/
     private void buscarUsuarios() {
         try {
             String texto = txtBuscar.getText().trim();

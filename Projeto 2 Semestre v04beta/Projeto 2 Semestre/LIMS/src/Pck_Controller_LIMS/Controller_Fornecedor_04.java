@@ -9,7 +9,6 @@ public class Controller_Fornecedor_04 {
 
     Persistencia_Fornecedor_04 persistencia = new Persistencia_Fornecedor_04();
 
-    // --------------------------- SALVAR ---------------------------
     public String salvarFornecedor(Model_Fornecedor_04 fornecedor) {
 
         if (fornecedor.getA04_nome().isEmpty() ||
@@ -25,7 +24,6 @@ public class Controller_Fornecedor_04 {
         return sucesso ? "Fornecedor salvo com sucesso!" : "Erro ao salvar fornecedor!";
     }
 
-    // --------------------------- ATUALIZAR ---------------------------
     public String atualizarFornecedor(Model_Fornecedor_04 fornecedor) {
 
         if (fornecedor.getA04_id_fornecedor() <= 0) {
@@ -33,10 +31,9 @@ public class Controller_Fornecedor_04 {
         }
 
         boolean sucesso = persistencia.atualizarFornecedor(fornecedor);
-        return sucesso ? "Fornecedor atualizado com sucesso!" : "Erro ao atualizar fornecedor!";
+        return sucesso ? "Fornecedor atualizado" : "Erro ao atualizar fornecedor";
     }
 
-    // --------------------------- EXCLUIR ---------------------------
     public String excluirFornecedor(int id) {
 
         if (id <= 0) {
@@ -44,15 +41,12 @@ public class Controller_Fornecedor_04 {
         }
 
         boolean sucesso = persistencia.excluirFornecedor(id);
-        return sucesso ? "Fornecedor excluído com sucesso!" : "Erro ao excluir fornecedor!";
+        return sucesso ? "Fornecedor excluído" : "Erro ao excluir fornecedor!";
     }
-
-    // --------------------------- LISTAR ---------------------------
     public ArrayList<Model_Fornecedor_04> listarFornecedores() {
         return persistencia.listarFornecedores();
     }
 
-    // --------------------------- BUSCAR POR ID ---------------------------
     public Model_Fornecedor_04 buscarFornecedorPorID(int id) {
 
         if (id <= 0) {

@@ -38,10 +38,6 @@ public class Persistencia_Estoque_06 {
         }
     }
 
-
-    // ================================
-    // ATUALIZAR
-    // ================================
     public boolean atualizarEstoque(Model_Estoque_06 m) {
         String sql = "{ CALL SP_ATUALIZAR_ESTOQUE_06(?, ?, ?, ?, ?) }";
 
@@ -69,10 +65,6 @@ public class Persistencia_Estoque_06 {
         }
     }
 
-
-    // ================================
-    // EXCLUIR
-    // ================================
     public boolean excluirEstoque(int id) {
         String sql = "{ CALL SP_EXCLUIR_ESTOQUE_06(?) }";
 
@@ -88,11 +80,6 @@ public class Persistencia_Estoque_06 {
             return false;
         }
     }
-
-
-    // ================================
-    // BUSCAR POR ID
-    // ================================
     public Model_Estoque_06 buscarEstoque(int id) {
         String sql = "{ CALL SP_BUSCAR_ESTOQUE_06(?) }";
 
@@ -119,11 +106,6 @@ public class Persistencia_Estoque_06 {
 
         return null;
     }
-
-
-    // ================================
-    // LISTAR TODOS
-    // ================================
     public List<Model_Estoque_06> listarEstoques() {
         List<Model_Estoque_06> lista = new ArrayList<>();
         String sql = "{ CALL SP_LISTAR_ESTOQUE_06() }";

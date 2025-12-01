@@ -17,18 +17,12 @@ public class Persistencia_Manutencao_05 {
     private ResultSet rs;
 
     public Persistencia_Manutencao_05() {
-        // abrir/fechar em cada método
     }
-
-    // INSERIR
     public boolean inserir_manutencao(Model_Manutencao_05 m) {
         try {
             conec = DAO_Conexao.connect();
             callable = conec.prepareCall("{ CALL SP_INSERIR_MANUTENCAO_05(?, ?, ?, ?, ?, ?, ?, ?, ?) }");
-            // ordem: V_DATA_MANUTENCAO, V_TIPO_MANUTENCAO, V_DESCRICAO,
-            // V_STATUS_RESULTADO, V_RELATORIO, V_ID_PROJETO, V_ID_USUARIO, V_ID_LOCALIZACAO, V_ID_PRODUTO
 
-            // data (aceita null)
             Date d = m.getA05_data_manutencao();
             if (d != null) callable.setDate(1, d);
             else callable.setNull(1, java.sql.Types.DATE);
@@ -53,14 +47,10 @@ public class Persistencia_Manutencao_05 {
         }
     }
 
-    // ATUALIZAR
     public boolean atualizar_manutencao(Model_Manutencao_05 m) {
         try {
             conec = DAO_Conexao.connect();
             callable = conec.prepareCall("{ CALL SP_ATUALIZAR_MANUTENCAO_05(?, ?, ?, ?, ?, ?, ?, ?, ?, ?) }");
-            // ordem: V_ID_MANUTENCAO, V_DATA_MANUTENCAO, V_TIPO_MANUTENCAO, V_DESCRICAO,
-            // V_STATUS_RESULTADO, V_RELATORIO, V_ID_PROJETO, V_ID_USUARIO, V_ID_LOCALIZACAO, V_ID_PRODUTO
-
             callable.setInt(1, m.getA05_id_manutencao());
 
             Date d = m.getA05_data_manutencao();
@@ -86,8 +76,6 @@ public class Persistencia_Manutencao_05 {
             try { if (conec != null) conec.close(); } catch (Exception ignored) {}
         }
     }
-
-    // DELETAR
     public boolean deletar_manutencao(int id) {
         try {
             conec = DAO_Conexao.connect();
@@ -103,8 +91,6 @@ public class Persistencia_Manutencao_05 {
             try { if (conec != null) conec.close(); } catch (Exception ignored) {}
         }
     }
-
-    // BUSCAR por ID -> retorna Model preenchido
     public Model_Manutencao_05 buscar_manutencao(int id) {
         Model_Manutencao_05 m = null;
         try {
@@ -135,8 +121,6 @@ public class Persistencia_Manutencao_05 {
         }
         return m;
     }
-
-    // LISTAR -> retorna lista
     public ArrayList<Model_Manutencao_05> listar_manutencao() {
         ArrayList<Model_Manutencao_05> lista = new ArrayList<>();
         try {

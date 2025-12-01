@@ -10,9 +10,6 @@ public class Controller_Pedido_03 {
 
     private Persistencia_Pedido_03 persistencia = new Persistencia_Pedido_03();
 
-    // ===========================
-    // SALVAR
-    // ===========================
     public boolean salvarPedido(Date dataPedido, String status, String observacao,
                                 int idUsuario, int idFornecedor) {
         try {
@@ -31,17 +28,13 @@ public class Controller_Pedido_03 {
             return false;
         }
     }
-
-    // ===========================
-    // EDITAR
-    // ===========================
     public boolean editarPedido(int idPedido, String dataPedido, String status,
                                 String observacao, int idUsuario, int idFornecedor) {
         try {
             Model_Pedido_03 p = new Model_Pedido_03();
 
             p.setA03_id_pedido(idPedido);
-            p.setA03_data_pedido(Date.valueOf(dataPedido)); // yyyy-MM-dd
+            p.setA03_data_pedido(Date.valueOf(dataPedido));
             p.setA03_status_pedido(status);
             p.setA03_observacoes(observacao);
             p.setA03_id_usuario(idUsuario);
@@ -54,24 +47,16 @@ public class Controller_Pedido_03 {
             return false;
         }
     }
-
-    // ===========================
-    // EXCLUIR
-    // ===========================
     public boolean excluirPedido(int idPedido) {
+
         return persistencia.deletar_pedido(idPedido);
     }
 
-    // ===========================
-    // BUSCAR (pelo ID)
-    // ===========================
     public Model_Pedido_03 buscarPedido(int idPedido) {
         return persistencia.buscar_pedido(idPedido);
     }
 
-    // ===========================
-    // LISTAR TODOS
-    // ===========================
+
     public ArrayList<Model_Pedido_03> listarPedidos() {
         return persistencia.listar_pedido();
     }

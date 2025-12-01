@@ -12,16 +12,12 @@ public class Persistencia_Pedido_03 {
     private CallableStatement callable;
 
     public Persistencia_Pedido_03() {
-        // abrimos/fechamos em cada método para segurança
     }
-
-    // inserir
     public boolean inserir_pedido(Model_Pedido_03 p) {
         try {
             conec = DAO_Conexao.connect();
             callable = conec.prepareCall("{ CALL SP_INSERIR_PEDIDO_03(?, ?, ?, ?, ?) }");
 
-            // ordem: V_DATA, V_STATUS, V_OBS, V_ID_USUARIO, V_ID_FORNECEDOR
             callable.setDate(1, p.getA03_data_pedido());
             callable.setString(2, p.getA03_status_pedido());
             callable.setString(3, p.getA03_observacoes());
@@ -38,14 +34,11 @@ public class Persistencia_Pedido_03 {
             try { if (conec != null) conec.close(); } catch (Exception ignored) {}
         }
     }
-
-    // atualizar
     public boolean atualizar_pedido(Model_Pedido_03 p) {
         try {
             conec = DAO_Conexao.connect();
             callable = conec.prepareCall("{ CALL SP_ATUALIZAR_PEDIDO_03(?, ?, ?, ?, ?, ?) }");
 
-            // ordem: pID, pDATA, pSTATUS, pOBS, pID_USUARIO, pID_FORNECEDOR
             callable.setInt(1, p.getA03_id_pedido());
             callable.setDate(2, p.getA03_data_pedido());
             callable.setString(3, p.getA03_status_pedido());
@@ -63,8 +56,6 @@ public class Persistencia_Pedido_03 {
             try { if (conec != null) conec.close(); } catch (Exception ignored) {}
         }
     }
-
-    // deletar
     public boolean deletar_pedido(int id) {
         try {
             conec = DAO_Conexao.connect();
@@ -81,8 +72,6 @@ public class Persistencia_Pedido_03 {
             try { if (conec != null) conec.close(); } catch (Exception ignored) {}
         }
     }
-
-    // buscar por id -> retorna Model
     public Model_Pedido_03 buscar_pedido(int id) {
         ResultSet rs = null;
         Model_Pedido_03 p = null;
@@ -110,8 +99,6 @@ public class Persistencia_Pedido_03 {
         }
         return p;
     }
-
-    // listar -> retorna lista para Controller/View montar a tabela
     public ArrayList<Model_Pedido_03> listar_pedido() {
         ArrayList<Model_Pedido_03> lista = new ArrayList<>();
         ResultSet rs = null;

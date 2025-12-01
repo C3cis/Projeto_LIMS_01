@@ -8,9 +8,6 @@ public class Controller_Usuario_11 {
 
     private Persistencia_Usuario_11 persistencia = new Persistencia_Usuario_11();
 
-    // ===========================================================
-    // GERAR CÓDIGO
-    // ===========================================================
     private String gerarCodigoUsuario(String nome) {
 
         String[] partes = nome.trim().split(" ");
@@ -22,10 +19,6 @@ public class Controller_Usuario_11 {
 
         return p1 + p2 + numero;
     }
-
-    // ===========================================================
-    // INSERIR
-    // ===========================================================
     public boolean inserir(Model_Usuario_11 u) {
 
         String codigo = gerarCodigoUsuario(u.getA11_nome());
@@ -33,38 +26,18 @@ public class Controller_Usuario_11 {
 
         return persistencia.inserir(u);
     }
-
-    // ===========================================================
-    // ATUALIZAR
-    // ===========================================================
     public boolean atualizar(Model_Usuario_11 u) {
         return persistencia.atualizar(u);
     }
-
-    // ===========================================================
-    // EXCLUIR
-    // ===========================================================
     public boolean excluir(int id) {
         return persistencia.excluir(id);
     }
-
-    // ===========================================================
-    // BUSCAR
-    // ===========================================================
     public Model_Usuario_11 buscar(int id) {
         return persistencia.buscar(id);
     }
-
-    // ===========================================================
-    // LISTAR
-    // ===========================================================
     public ArrayList<Model_Usuario_11> listar() {
         return persistencia.listar();
     }
-
-    // ===========================================================
-    // LOGIN
-    // ===========================================================
     public Model_Usuario_11 login(String email, String senha) {
         return persistencia.login(email, senha);
     }

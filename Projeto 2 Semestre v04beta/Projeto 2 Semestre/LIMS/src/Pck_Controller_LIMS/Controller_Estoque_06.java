@@ -14,7 +14,6 @@ public class Controller_Estoque_06 {
         this.persistencia = new Persistencia_Estoque_06();
     }
 
-    // inserir - devolve boolean para a View exibir mensagens
     public boolean inserirEstoque(Model_Estoque_06 m) {
         try {
             return persistencia.inserirEstoque(m);
@@ -24,7 +23,6 @@ public class Controller_Estoque_06 {
         }
     }
 
-    // atualizar
     public boolean atualizarEstoque(Model_Estoque_06 m) {
         try {
             return persistencia.atualizarEstoque(m);
@@ -33,8 +31,6 @@ public class Controller_Estoque_06 {
             return false;
         }
     }
-
-    // excluir
     public boolean excluirEstoque(int id) {
         try {
             return persistencia.excluirEstoque(id);
@@ -43,8 +39,6 @@ public class Controller_Estoque_06 {
             return false;
         }
     }
-
-    // buscar por id
     public Model_Estoque_06 buscarEstoque(int id) {
         try {
             return persistencia.buscarEstoque(id);
@@ -53,8 +47,6 @@ public class Controller_Estoque_06 {
             return null;
         }
     }
-
-    // listar todos (usado pela View)
     public List<Model_Estoque_06> listarEstoques() {
         try {
             return persistencia.listarEstoques();

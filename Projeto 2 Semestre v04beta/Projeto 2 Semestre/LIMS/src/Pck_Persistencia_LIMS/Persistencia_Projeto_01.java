@@ -12,12 +12,7 @@ public class Persistencia_Projeto_01 {
     private CallableStatement preparedState;
 
     public Persistencia_Projeto_01() {
-        // conexão é aberta e fechada por método
     }
-
-    // ===========================================================
-    // INSERIR PROJETO
-    // ===========================================================
     public boolean inserir_projeto(Model_Projeto_01 p) {
         try {
             conec = DAO_Conexao.connect();
@@ -43,10 +38,6 @@ public class Persistencia_Projeto_01 {
             fecharRecursos();
         }
     }
-
-    // ===========================================================
-    // ATUALIZAR PROJETO
-    // ===========================================================
     public boolean atualizar_projeto(Model_Projeto_01 p) {
         try {
             conec = DAO_Conexao.connect();
@@ -73,10 +64,6 @@ public class Persistencia_Projeto_01 {
             fecharRecursos();
         }
     }
-
-    // ===========================================================
-    // DELETAR PROJETO
-    // ===========================================================
     public boolean deletar_projeto(int id) {
         try {
             conec = DAO_Conexao.connect();
@@ -94,10 +81,6 @@ public class Persistencia_Projeto_01 {
             fecharRecursos();
         }
     }
-
-    // ===========================================================
-    // BUSCAR PROJETO POR ID
-    // ===========================================================
     public Model_Projeto_01 buscar_projeto(int id) {
         ResultSet rs = null;
         Model_Projeto_01 p = null;
@@ -123,10 +106,6 @@ public class Persistencia_Projeto_01 {
 
         return p;
     }
-
-    // ===========================================================
-    // LISTAR TODOS OS PROJETOS
-    // ===========================================================
     public ArrayList<Model_Projeto_01> listar_projeto() {
         ArrayList<Model_Projeto_01> lista = new ArrayList<>();
         ResultSet rs = null;
@@ -152,9 +131,6 @@ public class Persistencia_Projeto_01 {
         return lista;
     }
 
-    // ===========================================================
-    // MÉTODO PADRÃO PARA MONTAR O MODEL
-    // ===========================================================
     private Model_Projeto_01 preencherModel(ResultSet rs) throws SQLException {
 
         Model_Projeto_01 p = new Model_Projeto_01();
@@ -171,10 +147,6 @@ public class Persistencia_Projeto_01 {
 
         return p;
     }
-
-    // ===========================================================
-    // FECHAR RECURSOS
-    // ===========================================================
     private void fecharRecursos() {
         try { if (preparedState != null) preparedState.close(); } catch (Exception ignored) {}
         try { if (conec != null) conec.close(); } catch (Exception ignored) {}
