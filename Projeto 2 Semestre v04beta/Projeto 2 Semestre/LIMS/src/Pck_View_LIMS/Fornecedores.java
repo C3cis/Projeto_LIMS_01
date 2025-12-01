@@ -53,11 +53,6 @@ public class Fornecedores extends JDialog {
             public void windowClosing(WindowEvent e) { dispose(); }
         });
 
-        contentPane.registerKeyboardAction(
-                e -> dispose(),
-                KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
-                JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT
-        );
     }
 
     private void inicializarTabela() {

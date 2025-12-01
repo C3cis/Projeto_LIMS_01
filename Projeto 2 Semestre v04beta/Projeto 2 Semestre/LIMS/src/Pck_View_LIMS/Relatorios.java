@@ -72,15 +72,10 @@ public class Relatorios extends JDialog {
             }
         });
     }
-
-
-    // -------------------------------------
-    // CONFIGURAÇÃO DA TABELA
-    // -------------------------------------
     private void configurarTabela() {
 
         tableModel = new DefaultTableModel(
-                new Object[]{"ID", "Título", "Data", "Usuário", "Projeto"}, // <-- sem conteúdo
+                new Object[]{"ID", "Título", "Data", "Usuário", "Projeto"},
                 0
         ) {
             @Override
@@ -98,9 +93,6 @@ public class Relatorios extends JDialog {
         table1Geral.getColumnModel().getColumn(3).setPreferredWidth(80);
         table1Geral.getColumnModel().getColumn(4).setPreferredWidth(80);
     }
-    // -------------------------------------
-    // CARREGAR COMBOS
-    // -------------------------------------
     private void carregarCombos() {
 
         // Usuários
@@ -147,9 +139,6 @@ public class Relatorios extends JDialog {
         if (dataSQL == null) return "";
         return new SimpleDateFormat("dd/MM/yyyy").format(dataSQL);
     }
-    // -------------------------------------
-    // CARREGAR TABELA
-    // -------------------------------------
     private void carregarTabela() {
         tableModel.setRowCount(0); // limpa a tabela
 
@@ -174,9 +163,6 @@ public class Relatorios extends JDialog {
             });
         }
     }
-    // -------------------------------------
-    // SALVAR RELATÓRIO
-    // -------------------------------------
     private void salvarRelatorio() {
         try {
             Model_Relatorio_08 m = new Model_Relatorio_08();
@@ -211,9 +197,6 @@ public class Relatorios extends JDialog {
             JOptionPane.showMessageDialog(null, "Erro: " + e.getMessage());
         }
     }
-    // -------------------------------------
-    // EDITAR RELATÓRIO
-    // -------------------------------------
     private void editarRelatorio() {
 
         if (relatorioSelecionado == -1) {
@@ -252,10 +235,6 @@ public class Relatorios extends JDialog {
             JOptionPane.showMessageDialog(null, "Erro: " + e.getMessage());
         }
     }
-
-    // -------------------------------------
-    // EXCLUIR RELATÓRIO
-    // -------------------------------------
     private void excluirRelatorio() {
 
         if (relatorioSelecionado == -1) {
@@ -291,9 +270,6 @@ public class Relatorios extends JDialog {
             JOptionPane.showMessageDialog(null, "Erro ao buscar: " + e.getMessage());
         }
     }
-    // -------------------------------------
-    // CARREGAR CAMPOS QUANDO CLICAR NA LINHA
-    // -------------------------------------
     private void carregarCamposDaLinha() {
 
         int row = table1Geral.getSelectedRow();
@@ -303,14 +279,14 @@ public class Relatorios extends JDialog {
         relatorioSelecionado = (int) tableModel.getValueAt(row, 0);
 
         try {
-            // Buscar o relatório completo no banco (para pegar o conteúdo)
+            // Buscar o relatório
             Model_Relatorio_08 m = controller.buscar(relatorioSelecionado);
 
             textField2Titulo.setText(m.getA08_titulo());
             editorPane1Conteudo.setText(m.getA08_conteudo());
             textField6DataGeracao.setText(String.valueOf(m.getA08_data_geracao()));
 
-            // Selecionar usuário no combo
+            // Selecionar usuário
             for (int i = 0; i < comboBox1Id_Usuario.getItemCount(); i++) {
                 if (comboBox1Id_Usuario.getItemAt(i).toString()
                         .startsWith(m.getA08_id_usuario() + " - ")) {
@@ -319,7 +295,7 @@ public class Relatorios extends JDialog {
                 }
             }
 
-            // Selecionar projeto no combo
+            // Selecionar projeto
             for (int i = 0; i < comboBox3NomeProjeto.getItemCount(); i++) {
                 if (comboBox3NomeProjeto.getItemAt(i).toString()
                         .startsWith(m.getA08_id_projeto() + " - ")) {

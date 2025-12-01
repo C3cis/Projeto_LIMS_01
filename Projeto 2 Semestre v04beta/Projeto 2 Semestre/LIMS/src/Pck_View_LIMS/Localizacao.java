@@ -42,7 +42,6 @@ public class Localizacao extends JDialog {
         carregarUsuarios();
         preencherTabela();
 
-        // Listeners
         salvarButton.addActionListener(e -> onSalvar());
         editarButton.addActionListener(e -> onEditar());
         excluirButton.addActionListener(e -> onExcluir());
@@ -54,16 +53,7 @@ public class Localizacao extends JDialog {
                 onTabelaClick();
             }
         });
-
-        // Esc para fechar (opcional)
-        contentPane.registerKeyboardAction(e -> dispose(),
-                KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
-                JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
     }
-
-    // -------------------------
-    // Inicializar tabela
-    // -------------------------
     private void inicializarTabela() {
         tableModel = new DefaultTableModel(
                 new Object[]{"ID", "Setor", "Identificação", "Usuário"}, 0
@@ -73,17 +63,12 @@ public class Localizacao extends JDialog {
         };
         table1Geral.setModel(tableModel);
     }
-
-    // -------------------------
-    // Carregar usuários no combo (ID - Nome)
-    // -------------------------
     private void carregarUsuarios() {
         comboBox1Usuario.removeAllItems();
         try {
             ArrayList<Model_Usuario_11> lista = controllerUsuario.listar();
             if (lista != null && !lista.isEmpty()) {
                 for (Model_Usuario_11 u : lista) {
-                    // ajusta para os nomes dos getters do model de usuário
                     comboBox1Usuario.addItem(u.getA11_id_usuario() + " - " + u.getA11_nome());
                 }
             } else {
@@ -93,19 +78,13 @@ public class Localizacao extends JDialog {
             JOptionPane.showMessageDialog(this, "Erro ao carregar usuários: " + e.getMessage());
         }
     }
-
-    // -------------------------
-    // Preencher tabela
-    // -------------------------
     private void preencherTabela() {
         tableModel.setRowCount(0);
         try {
             List<Model_Localizacao_07> lista = controller.listar();
             if (lista != null) {
                 for (Model_Localizacao_07 l : lista) {
-                    // OBS: supondo que seu model tem getA07_id_usuario() e getA07_id_localizacao(), etc.
                     String usuarioExibicao = String.valueOf(l.getA07_id_usuario());
-                    // se quiser tentar mostrar nome do usuário junto, buscamos no controllerUsuario:
                     try {
                         Model_Usuario_11 u = controllerUsuario.buscar(l.getA07_id_usuario());
                         if (u != null) usuarioExibicao = u.getA11_id_usuario() + " - " + u.getA11_nome();
@@ -123,10 +102,6 @@ public class Localizacao extends JDialog {
             JOptionPane.showMessageDialog(this, "Erro ao preencher tabela: " + e.getMessage());
         }
     }
-
-    // -------------------------
-    // Extrai ID da string "ID - Nome"
-    // -------------------------
     private int extrairIdDoCombo(Object item) {
         if (item == null) return 0;
         String s = item.toString().trim();
@@ -138,10 +113,6 @@ public class Localizacao extends JDialog {
             return 0;
         }
     }
-
-    // -------------------------
-    // Ações: SALVAR
-    // -------------------------
     private void onSalvar() {
         try {
             String setor = textField2Setor.getText().trim();
@@ -162,7 +133,6 @@ public class Localizacao extends JDialog {
             }
 
             Model_Localizacao_07 model = new Model_Localizacao_07();
-            // ajuste dos nomes dos setters conforme seu model
             model.setA07_setor(setor);
             model.setA07_identificacao(identificacao);
             model.setA07_id_usuario(idUsuario);
@@ -179,10 +149,6 @@ public class Localizacao extends JDialog {
             JOptionPane.showMessageDialog(this, "Erro ao salvar: " + e.getMessage());
         }
     }
-
-    // -------------------------
-    // Ações: EDITAR
-    // -------------------------
     private void onEditar() {
         if (selecionadoId <= 0) {
             JOptionPane.showMessageDialog(this, "Selecione uma linha para editar.");
@@ -225,10 +191,6 @@ public class Localizacao extends JDialog {
             JOptionPane.showMessageDialog(this, "Erro ao atualizar: " + e.getMessage());
         }
     }
-
-    // -------------------------
-    // Ações: EXCLUIR
-    // -------------------------
     private void onExcluir() {
         if (selecionadoId <= 0) {
             JOptionPane.showMessageDialog(this, "Selecione uma linha para excluir.");
@@ -252,10 +214,6 @@ public class Localizacao extends JDialog {
             JOptionPane.showMessageDialog(this, "Erro ao excluir: " + e.getMessage());
         }
     }
-
-    // -------------------------
-    // Ações: BUSCAR
-    // -------------------------
     private void onBuscar() {
         String s = JOptionPane.showInputDialog(this, "ID para buscar:");
         if (s == null || s.trim().isEmpty()) return;
@@ -273,10 +231,6 @@ public class Localizacao extends JDialog {
             JOptionPane.showMessageDialog(this, "Erro ao buscar: " + e.getMessage());
         }
     }
-
-    // -------------------------
-    // Ao clicar linha da tabela
-    // -------------------------
     private void onTabelaClick() {
         int row = table1Geral.getSelectedRow();
         if (row < 0) return;

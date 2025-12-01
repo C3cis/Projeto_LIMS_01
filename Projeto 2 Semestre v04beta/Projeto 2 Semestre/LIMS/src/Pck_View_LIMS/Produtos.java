@@ -67,7 +67,6 @@ public class Produtos extends JDialog {
         buscarButton.addActionListener(e -> buscarProdutoPorID());
         sairButton.addActionListener(e -> dispose());
 
-        // Seleção da tabela
         table1.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) {
@@ -77,8 +76,6 @@ public class Produtos extends JDialog {
             }
         });
     }
-
-    // ---------------- MÁSCARA DE DATAS ----------------
     private void aplicarMascaraDatas() {
         try {
             MaskFormatter mf1 = new MaskFormatter("##/##/####");
@@ -94,8 +91,6 @@ public class Produtos extends JDialog {
             e.printStackTrace();
         }
     }
-
-    // ---------------- CONFIGURAR TABELA ----------------
     private void configurarTabela() {
         tableModel = new DefaultTableModel(
                 new String[]{
@@ -106,8 +101,6 @@ public class Produtos extends JDialog {
         );
         table1.setModel(tableModel);
     }
-
-    // ---------------- CARREGAR COMBOS ----------------
     private void carregarCombos() {
         comboBox2Status.removeAllItems();
         comboBox2Status.addItem("CONSUMO");
@@ -130,8 +123,6 @@ public class Produtos extends JDialog {
             }
         }
     }
-
-    // ---------------- CARREGAR TABELA ----------------
     private void carregarTabela() {
         tableModel.setRowCount(0);
 
@@ -181,8 +172,6 @@ public class Produtos extends JDialog {
         if (d == null) return "";
         return new SimpleDateFormat("dd/MM/yyyy").format(d);
     }
-
-    // ---------------- SALVAR PRODUTO ----------------
     private void salvarProduto() {
         try {
             String nome = textField2nomeProduto.getText().trim();
@@ -215,8 +204,6 @@ public class Produtos extends JDialog {
             JOptionPane.showMessageDialog(null, "Erro ao salvar: " + ex.getMessage());
         }
     }
-
-    // ---------------- EDITAR PRODUTO ----------------
     private void editarProduto() {
         if (produtoSelecionado == -1) {
             JOptionPane.showMessageDialog(null, "Selecione um produto.");
@@ -247,8 +234,6 @@ public class Produtos extends JDialog {
             JOptionPane.showMessageDialog(null, "Erro ao editar: " + ex.getMessage());
         }
     }
-
-    // ---------------- EXCLUIR PRODUTO ----------------
     private void excluirProduto() {
         if (produtoSelecionado == -1) {
             JOptionPane.showMessageDialog(null, "Selecione um produto.");
@@ -265,8 +250,6 @@ public class Produtos extends JDialog {
             JOptionPane.showMessageDialog(null, "Erro ao excluir produto.");
         }
     }
-
-    // ---------------- CARREGAR CAMPOS DA LINHA ----------------
     private void carregarCamposDaLinha() {
         int row = table1.getSelectedRow();
         if (row == -1) return;
@@ -290,8 +273,6 @@ public class Produtos extends JDialog {
             editorPane1Descricao.setText(produto.getA02_descricao());
         }
     }
-
-    // ---------------- BUSCA POR ID ----------------
     private void buscarProdutoPorID() {
         String input = JOptionPane.showInputDialog(null, "Digite o ID do produto:");
         if (input == null || input.trim().isEmpty()) return;
@@ -318,8 +299,6 @@ public class Produtos extends JDialog {
             JOptionPane.showMessageDialog(null, "Digite um ID válido.");
         }
     }
-
-    // ---------------- UTILITÁRIOS ----------------
     private Date converterParaDateSQL(String dataStr) {
         try {
             if (dataStr == null) return null;

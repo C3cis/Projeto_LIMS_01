@@ -69,10 +69,7 @@ public class Cadastro extends JDialog {
             }
         });
 
-        // ESC fecha
-        contentPane.registerKeyboardAction(e -> dispose(),
-                KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
-                JComponent.WHEN_IN_FOCUSED_WINDOW);
+
     }
 
     private void montarTabela() {

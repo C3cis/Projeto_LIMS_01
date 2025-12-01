@@ -43,7 +43,6 @@ public class Visualizar_Dados extends JDialog {
         contentPane.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
         setContentPane(contentPane);
 
-        // Painel Topo
         JPanel painelTopo = new JPanel(new BorderLayout());
 
         JLabel titulo = new JLabel("Visualizar Dados", SwingConstants.CENTER);
@@ -65,7 +64,6 @@ public class Visualizar_Dados extends JDialog {
         painelTopo.add(painelBusca, BorderLayout.SOUTH);
         contentPane.add(painelTopo, BorderLayout.NORTH);
 
-        // Tabela
         tableModel = new DefaultTableModel(
                 new Object[]{"ID", "Produto", "Tipo", "Data Chegada", "Fornecedor", "Projeto"}, 0
         ) {
@@ -93,7 +91,7 @@ public class Visualizar_Dados extends JDialog {
 
 
     private void configurarTabela() {
-        table1.setAutoResizeMode(JTable.AUTO_RESIZE_SUBSEQUENT_COLUMNS); // últimas colunas se expandem
+        table1.setAutoResizeMode(JTable.AUTO_RESIZE_SUBSEQUENT_COLUMNS);
         TableColumnModel cm = table1.getColumnModel();
 
         cm.getColumn(0).setPreferredWidth(50);   // ID

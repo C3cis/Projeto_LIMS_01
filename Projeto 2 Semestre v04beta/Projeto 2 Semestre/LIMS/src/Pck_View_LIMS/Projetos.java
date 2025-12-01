@@ -67,17 +67,12 @@ public class Projetos extends JDialog {
         buscarButton.addActionListener(e -> buscarProjeto());
         sairButton.addActionListener(e -> dispose());
 
-        // Clique na tabela
         table1geral.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent e) {
                 carregarCamposDaTabela();
             }
         });
     }
-
-    // ==========================
-    // CARREGAR COMBO STATUS
-    // ==========================
     private void carregarStatus() {
         cmbStatus.removeAllItems();
         cmbStatus.addItem("ATIVO");
@@ -85,9 +80,6 @@ public class Projetos extends JDialog {
         cmbStatus.addItem("CANCELADO");
     }
 
-    // ==========================
-    // CARREGAR USUARIOS
-    // ==========================
     private void carregarUsuarios() {
         try (Connection c = DAO_Conexao.connect();
              PreparedStatement ps = c.prepareStatement("SELECT A11_ID_USUARIO, A11_NOME FROM USUARIO_11");
@@ -103,10 +95,6 @@ public class Projetos extends JDialog {
             JOptionPane.showMessageDialog(null, "Erro ao carregar usuários: " + e.getMessage());
         }
     }
-
-    // ==========================
-    // INICIALIZAR TABELA
-    // ==========================
     private void inicializarTabela() {
 
         tableModel = new DefaultTableModel(
@@ -115,13 +103,9 @@ public class Projetos extends JDialog {
         );
 
         table1geral.setModel(tableModel);
-        table1geral.setDefaultEditor(Object.class, null); // somente leitura
+        table1geral.setDefaultEditor(Object.class, null);
         table1geral.setAutoCreateRowSorter(true);
     }
-
-    // ==========================
-    // PREENCHER TABELA
-    // ==========================
     private void preencherTabela() {
 
         try {
@@ -158,11 +142,11 @@ public class Projetos extends JDialog {
         try {
             MaskFormatter mf1 = new MaskFormatter("##/##/####");
             mf1.setPlaceholderCharacter('_');
-            mf1.install(textField1dataIni);  // ✅ sem cast
+            mf1.install(textField1dataIni);
 
             MaskFormatter mf2 = new MaskFormatter("##/##/####");
             mf2.setPlaceholderCharacter('_');
-            mf2.install(txtDataFinal);        // ✅ sem cast
+            mf2.install(txtDataFinal);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -214,9 +198,6 @@ public class Projetos extends JDialog {
         DecimalFormat df = new DecimalFormat("#,##0.00", symbols);
         return "R$ " + df.format(valor);
     }
-    // ==========================
-    // SALVAR PROJETO
-    // ==========================
     private void salvarProjeto() {
         try {
             Model_Projeto_01 m = montarModelDoFormulario();
@@ -234,10 +215,6 @@ public class Projetos extends JDialog {
             JOptionPane.showMessageDialog(null, "Erro ao salvar: " + e.getMessage());
         }
     }
-
-    // ==========================
-    // EDITAR PROJETO
-    // ==========================
     private void editarProjeto() {
 
         int linha = table1geral.getSelectedRow();
@@ -271,10 +248,6 @@ public class Projetos extends JDialog {
             }
         }
     }
-
-    // ==========================
-    // EXCLUIR
-    // ==========================
     private void excluirProjeto() {
         int linha = table1geral.getSelectedRow();
         if (linha < 0) {
@@ -298,10 +271,6 @@ public class Projetos extends JDialog {
             }
         }
     }
-
-    // ==========================
-    // BUSCAR — ID VIA INPUT
-    // ==========================
     private void buscarProjeto() {
         try {
             String s = JOptionPane.showInputDialog("ID do projeto:");
@@ -325,9 +294,6 @@ public class Projetos extends JDialog {
         }
     }
 
-    // ==========================
-    // Montar Model do Formulário
-    // ==========================
     private Model_Projeto_01 montarModelDoFormulario() {
         Model_Projeto_01 m = new Model_Projeto_01();
 
@@ -374,10 +340,6 @@ public class Projetos extends JDialog {
 
         return m;
     }
-
-    // ==========================
-    // Preencher Formulário
-    // ==========================
     private void preencherFormulario(Model_Projeto_01 m) {
 
         textField1dataIni.setText(converterDataParaTela(m.getA01_data_inicial()));
@@ -395,10 +357,6 @@ public class Projetos extends JDialog {
             }
         }
     }
-
-    // ==========================
-    // Clique na tabela → preencher
-    // ==========================
     private void carregarCamposDaTabela() {
 
         int linha = table1geral.getSelectedRow();
@@ -419,16 +377,11 @@ public class Projetos extends JDialog {
                 break;
             }
         }
-
-        // Buscar descrição do banco (não está na tabela)
+        // Buscar descrição
         Controller_Projeto_01 controller = new Controller_Projeto_01();
         Model_Projeto_01 p = controller.buscar_projeto((int) tableModel.getValueAt(linha, 0));
         if (p != null) editorPane1Descri.setText(p.getA01_descricao());
     }
-
-    // ==========================
-    // Limpar Campos
-    // ==========================
     private void limparCampos() {
         txtNomeProjeto.setText("");
         editorPane1Descri.setText("");

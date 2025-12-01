@@ -43,16 +43,7 @@ public class Principal extends JDialog {
         manutençãoButton.addActionListener(e -> abrirTela(new Manutencao()));
         estoqueButton.addActionListener(e -> abrirTela(new Estoque()));
         localizaçãoButton.addActionListener(e -> abrirTela(new Localizacao()));
-
-
-        contentPane.registerKeyboardAction(e -> dispose(),
-                KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
-                JComponent.WHEN_IN_FOCUSED_WINDOW);
     }
-
-    // =========================================================
-    // PERMISSÕES DO USUÁRIO
-    // =========================================================
     private void aplicarPermissoes() {
         String cargo = usuarioLogado.getA11_cargo();
 
