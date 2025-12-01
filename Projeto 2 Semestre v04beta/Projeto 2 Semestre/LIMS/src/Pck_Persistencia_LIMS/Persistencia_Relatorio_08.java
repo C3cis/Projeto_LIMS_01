@@ -93,7 +93,7 @@ public class Persistencia_Relatorio_08 {
                 Model_Relatorio_08 m = new Model_Relatorio_08();
                 m.setA08_id_relatorio(rs.getInt("A08_ID_RELATORIO"));
                 m.setA08_titulo(rs.getString("A08_TITULO"));
-                m.setA08_data_geracao(rs.getDate("A08_DATA_GERACAO"));   // <-- CORRIGIDO
+                m.setA08_data_geracao(rs.getDate("A08_DATA_GERACAO"));
                 m.setA08_conteudo(rs.getString("A08_CONTEUDO"));
                 m.setA08_id_usuario(rs.getInt("A08_ID_USUARIO"));
                 m.setA08_id_projeto(rs.getInt("A08_ID_PROJETO"));

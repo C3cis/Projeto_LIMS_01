@@ -5,9 +5,14 @@ package Pck_View_LIMS;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.text.MaskFormatter;
 import java.awt.event.*;
 import java.sql.*;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Locale;
 
 import Pck_Controller_LIMS.Controller_Projeto_01;
 import Pck_Model_LIMS.Model_Projeto_01;
@@ -20,15 +25,13 @@ public class Projetos extends JDialog {
     // Campos
     private JTextField txtNomeProjeto;
     private JTextField txtDepartamento;
-    private JTextField textField1dataIni;
-    private JTextField txtDataFinal;
+    private JFormattedTextField textField1dataIni;
+    private JFormattedTextField txtDataFinal;
     private JTextField txtOrcamento;
-
 
     private JLabel txtDescricao;
     private JLabel dataInicialLabel;
     private JLabel JLabelnomeLabel;
-
     private JEditorPane editorPane1Descri;
 
     // Combos
@@ -55,6 +58,8 @@ public class Projetos extends JDialog {
         carregarStatus();
         carregarUsuarios();
         preencherTabela();
+        aplicarMascaraDatas();
+
 
         salvarButton.addActionListener(e -> salvarProjeto());
         editarButton.addActionListener(e -> editarProjeto());
@@ -126,23 +131,89 @@ public class Projetos extends JDialog {
             tableModel.setRowCount(0);
 
             for (Model_Projeto_01 p : lista) {
+
+                String dataInicialFormatada = converterDataParaTela(p.getA01_data_inicial());
+                String dataFinalFormatada   = converterDataParaTela(p.getA01_data_final());
+                String orcamentoFormatado   = formatarValorBR(p.getA01_orcamento());
+
                 tableModel.addRow(new Object[]{
                         p.getA01_id_projeto(),
                         p.getA01_nome_projeto(),
-                        p.getA01_data_inicial(),
-                        p.getA01_data_final(),
-                        p.getA01_orcamento(),
+                        dataInicialFormatada,
+                        dataFinalFormatada,
+                        orcamentoFormatado,
                         p.getA01_status_projeto(),
                         p.getA01_departamento(),
                         p.getA01_id_usuario()
                 });
             }
 
+            tableModel.fireTableDataChanged();
+
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Erro ao preencher tabela: " + e.getMessage());
         }
     }
+    private void aplicarMascaraDatas() {
+        try {
+            MaskFormatter mf1 = new MaskFormatter("##/##/####");
+            mf1.setPlaceholderCharacter('_');
+            mf1.install(textField1dataIni);  // ✅ sem cast
 
+            MaskFormatter mf2 = new MaskFormatter("##/##/####");
+            mf2.setPlaceholderCharacter('_');
+            mf2.install(txtDataFinal);        // ✅ sem cast
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    private Date converterParaDateSQL(String dataStr) {
+        try {
+            if (dataStr == null) return null;
+            dataStr = dataStr.trim();
+            if (dataStr.isEmpty() || dataStr.contains("_")) return null;
+
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+            sdf.setLenient(false);
+
+            java.util.Date d = sdf.parse(dataStr);
+            return new Date(d.getTime());
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    private String converterDataParaTela(Date dataSQL) {
+        if (dataSQL == null) return "";
+        return new SimpleDateFormat("dd/MM/yyyy").format(dataSQL);
+    }
+
+    private double converterValor(String texto) {
+        if (texto == null) return -1;
+
+        String t = texto.replace("R$", "")
+                .replace(" ", "")
+                .replace(".", "")
+                .replace(",", ".")
+                .trim();
+        try {
+            return Double.parseDouble(t);
+        } catch (Exception e) {
+            return -1;
+        }
+    }
+
+    private String formatarValorBR(double valor) {
+        Locale localeBR = Locale.of("pt", "BR");
+
+        DecimalFormatSymbols symbols = new DecimalFormatSymbols(localeBR);
+        symbols.setDecimalSeparator(',');
+        symbols.setGroupingSeparator('.');
+
+        DecimalFormat df = new DecimalFormat("#,##0.00", symbols);
+        return "R$ " + df.format(valor);
+    }
     // ==========================
     // SALVAR PROJETO
     // ==========================
@@ -264,7 +335,12 @@ public class Projetos extends JDialog {
         m.setA01_descricao(editorPane1Descri.getText());
 
         try {
-            m.setA01_data_inicial(Date.valueOf(textField1dataIni.getText().trim()));
+            Date dataIni = converterParaDateSQL(textField1dataIni.getText());
+            if (dataIni == null) {
+                JOptionPane.showMessageDialog(null, "Data inicial inválida!");
+                return null;
+            }
+            m.setA01_data_inicial(dataIni);
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Data inicial inválida! Use AAAA-MM-DD.");
             return null;
@@ -272,14 +348,19 @@ public class Projetos extends JDialog {
 
         String dataF = txtDataFinal.getText().trim();
         try {
-            m.setA01_data_final(dataF.isEmpty() ? null : Date.valueOf(dataF));
-        } catch (Exception e) {
+            Date dataFim = converterParaDateSQL(txtDataFinal.getText());
+            m.setA01_data_final(dataFim);        } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Data final inválida! Use AAAA-MM-DD.");
             return null;
         }
 
         try {
-            m.setA01_orcamento(Double.parseDouble(txtOrcamento.getText().trim()));
+            double valor = converterValor(txtOrcamento.getText());
+            if (valor < 0) {
+                JOptionPane.showMessageDialog(null, "Orçamento inválido!");
+                return null;
+            }
+            m.setA01_orcamento(valor);
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Orçamento inválido!");
             return null;
@@ -299,13 +380,10 @@ public class Projetos extends JDialog {
     // ==========================
     private void preencherFormulario(Model_Projeto_01 m) {
 
-        txtNomeProjeto.setText(m.getA01_nome_projeto());
-        editorPane1Descri.setText(m.getA01_descricao());
+        textField1dataIni.setText(converterDataParaTela(m.getA01_data_inicial()));
+        txtDataFinal.setText(converterDataParaTela(m.getA01_data_final()));
 
-        textField1dataIni.setText(m.getA01_data_inicial() != null ? m.getA01_data_inicial().toString() : "");
-        txtDataFinal.setText(m.getA01_data_final() != null ? m.getA01_data_final().toString() : "");
-
-        txtOrcamento.setText(String.valueOf(m.getA01_orcamento()));
+        txtOrcamento.setText(formatarValorBR(m.getA01_orcamento()));
         txtDepartamento.setText(m.getA01_departamento());
         cmbStatus.setSelectedItem(m.getA01_status_projeto());
 

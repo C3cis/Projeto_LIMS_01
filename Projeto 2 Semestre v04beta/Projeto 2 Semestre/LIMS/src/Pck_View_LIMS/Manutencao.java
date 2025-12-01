@@ -15,9 +15,11 @@ import Pck_Model_LIMS.Model_Produto_02;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.text.MaskFormatter;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,10 +29,10 @@ public class Manutencao extends JDialog {
     private JLabel descricaoLabel;
     private JEditorPane editorPane1Descricao;
     private JLabel dataInicialLabel;
-    private JTextField textField1Data_Geracao;
+    private JFormattedTextField textField1Data_Geracao;
     private JComboBox comboBox1; // status_resultado
     private JComboBox comboBox2ID_Projeto;
-    private JTextField textField5TipoManutencao; // <<-- corrigido: tipo da manutenção
+    private JTextField textField5TipoManutencao;
     private JButton salvarButton;
     private JButton editarButton;
     private JButton excluirButton;
@@ -66,6 +68,7 @@ public class Manutencao extends JDialog {
         configurarTabela();
         carregarCombos();
         carregarTabela();
+        aplicarMascaraDatas();
 
         salvarButton.addActionListener(e -> salvarManutencao());
         editarButton.addActionListener(e -> editarManutencao());
@@ -109,7 +112,33 @@ public class Manutencao extends JDialog {
             table1.getColumnModel().getColumn(8).setPreferredWidth(150);  // Produto
         }
     }
+    private void aplicarMascaraDatas() {
+        try {
+            MaskFormatter mf = new MaskFormatter("##/##/####");
+            mf.setPlaceholderCharacter('_');
+            mf.install(textField1Data_Geracao);  // Campo da data de manutenção
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    private Date converterParaDateSQL(String dataStr) {
+        try {
+            if (dataStr == null) return null;
+            dataStr = dataStr.trim();
+            if (dataStr.isEmpty() || dataStr.contains("_")) return null;
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+            sdf.setLenient(false);
+            java.util.Date d = sdf.parse(dataStr);
+            return new Date(d.getTime());
+        } catch (Exception e) {
+            return null;
+        }
+    }
 
+    private String converterDataParaTela(Date dataSQL) {
+        if (dataSQL == null) return "";
+        return new SimpleDateFormat("dd/MM/yyyy").format(dataSQL);
+    }
     private void carregarCombos() {
         comboBox2ID_Projeto.removeAllItems();
         comboBox4ID_Usuario.removeAllItems();
@@ -201,7 +230,7 @@ public class Manutencao extends JDialog {
 
             tableModel.addRow(new Object[]{
                     m.getA05_id_manutencao(),
-                    m.getA05_data_manutencao(),
+                    converterDataParaTela(m.getA05_data_manutencao()),  // <- formato dd/MM/yyyy
                     m.getA05_tipo_manutencao(),
                     m.getA05_descricao(),
                     m.getA05_status_resultado(),
@@ -219,8 +248,12 @@ public class Manutencao extends JDialog {
 
             // Data (valide formato no UI: yyyy-MM-dd)
             if (textField1Data_Geracao.getText() != null && !textField1Data_Geracao.getText().trim().isEmpty()) {
-                m.setA05_data_manutencao(Date.valueOf(textField1Data_Geracao.getText().trim()));
-            } else {
+                Date dataMan = converterParaDateSQL(textField1Data_Geracao.getText());
+                if (dataMan == null) {
+                    JOptionPane.showMessageDialog(null, "Data inválida! Use dd/MM/yyyy.");
+                    return;
+                }
+                m.setA05_data_manutencao(dataMan);            } else {
                 m.setA05_data_manutencao(null);
             }
 
@@ -291,8 +324,12 @@ public class Manutencao extends JDialog {
             m.setA05_id_manutencao((int) tableModel.getValueAt(row, 0));
 
             if (textField1Data_Geracao.getText() != null && !textField1Data_Geracao.getText().trim().isEmpty()) {
-                m.setA05_data_manutencao(Date.valueOf(textField1Data_Geracao.getText().trim()));
-            } else {
+                Date dataMan = converterParaDateSQL(textField1Data_Geracao.getText());
+                if (dataMan == null) {
+                    JOptionPane.showMessageDialog(null, "Data inválida! Use dd/MM/yyyy.");
+                    return;
+                }
+                m.setA05_data_manutencao(dataMan);            } else {
                 m.setA05_data_manutencao(null);
             }
 
@@ -428,9 +465,10 @@ public class Manutencao extends JDialog {
         if (m == null) return;
 
         // preencher campos
-        if (m.getA05_data_manutencao() != null) textField1Data_Geracao.setText(m.getA05_data_manutencao().toString()); else textField1Data_Geracao.setText("");
-        textField5TipoManutencao.setText((m.getA05_tipo_manutencao() != null) ? m.getA05_tipo_manutencao() : "");
-        editorPane1Descricao.setText((m.getA05_descricao() != null) ? m.getA05_descricao() : "");
+        if (m.getA05_data_manutencao() != null)
+            textField1Data_Geracao.setText(converterDataParaTela(m.getA05_data_manutencao()));
+        else
+            textField1Data_Geracao.setText("");
 
         // relatório (não aparece na tabela)
         editorPane2Relatorio.setText((m.getA05_relatorio() != null) ? m.getA05_relatorio() : "");

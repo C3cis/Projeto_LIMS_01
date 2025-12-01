@@ -9,9 +9,11 @@ import Pck_Model_LIMS.Model_Usuario_11;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.text.MaskFormatter;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 public class Relatorios extends JDialog {
@@ -26,7 +28,7 @@ public class Relatorios extends JDialog {
     private JTable table1Geral;
     private JTextField textField2Titulo;
     private JEditorPane editorPane1Conteudo;
-    private JTextField textField6DataGeracao;
+    private JFormattedTextField textField6DataGeracao;
     private JComboBox comboBox1Id_Usuario;
     private JComboBox comboBox3NomeProjeto;
     private JTextField textField2IdRelatorio;
@@ -54,36 +56,12 @@ public class Relatorios extends JDialog {
         configurarTabela();
         carregarCombos();
         carregarTabela();
-
+        aplicarMascaraDatas();
         salvarButton.addActionListener(e -> salvarRelatorio());
         editarButton.addActionListener(e -> editarRelatorio());
         excluirButton.addActionListener(e -> excluirRelatorio());
-        buscarButton.addActionListener(e -> {
-            try {
-                int id = Integer.parseInt(textField2IdRelatorio.getText());
-
-                Model_Relatorio_08 m = controller.buscar(id);
-
-                if (m != null) {
-
-                    tableModel.setRowCount(0); // limpa tabela
-
-                    tableModel.addRow(new Object[]{
-                            m.getA08_id_relatorio(),
-                            m.getA08_titulo(),
-                            m.getA08_data_geracao(),
-                            m.getA08_id_usuario(),
-                            m.getA08_id_projeto()
-                    });
-
-                } else {
-                    JOptionPane.showMessageDialog(null, "ID não encontrado.");
-                }
-
-            } catch (Exception ex) {
-                JOptionPane.showMessageDialog(null, "Digite um ID válido.");
-            }
-        });        sairButton.addActionListener(e -> dispose());
+        buscarButton.addActionListener(e -> buscarRelatorio08());
+        sairButton.addActionListener(e -> dispose());
 
         table1Geral.addMouseListener(new MouseAdapter() {
             @Override
@@ -94,6 +72,7 @@ public class Relatorios extends JDialog {
             }
         });
     }
+
 
     // -------------------------------------
     // CONFIGURAÇÃO DA TABELA
@@ -136,7 +115,38 @@ public class Relatorios extends JDialog {
             comboBox3NomeProjeto.addItem(p.getA01_id_projeto() + " - " + p.getA01_nome_projeto());
         }
     }
+    private void aplicarMascaraDatas() {
+        try {
+            MaskFormatter mf = new MaskFormatter("##/##/####");
+            mf.setPlaceholderCharacter('_');
+            mf.install(textField6DataGeracao);
+            textField6DataGeracao.setFocusLostBehavior(JFormattedTextField.COMMIT);
 
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    private Date converterParaDateSQL(String dataStr) {
+        try {
+            if (dataStr == null) return null;
+            dataStr = dataStr.trim();
+
+            if (dataStr.isEmpty() || dataStr.contains("_")) return null;
+
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+            sdf.setLenient(false);
+
+            java.util.Date d = sdf.parse(dataStr);
+            return new Date(d.getTime());
+
+        } catch (Exception e) {
+            return null;
+        }
+    }
+    private String converterDataParaTela(Date dataSQL) {
+        if (dataSQL == null) return "";
+        return new SimpleDateFormat("dd/MM/yyyy").format(dataSQL);
+    }
     // -------------------------------------
     // CARREGAR TABELA
     // -------------------------------------
@@ -158,7 +168,7 @@ public class Relatorios extends JDialog {
             tableModel.addRow(new Object[]{
                     m.getA08_id_relatorio(),
                     m.getA08_titulo(),
-                    m.getA08_data_geracao(),
+                    converterDataParaTela(m.getA08_data_geracao()),
                     usuarioTexto,
                     projetoTexto
             });
@@ -173,8 +183,15 @@ public class Relatorios extends JDialog {
 
             m.setA08_titulo(textField2Titulo.getText());
             m.setA08_conteudo(editorPane1Conteudo.getText());
-            m.setA08_data_geracao(Date.valueOf(textField6DataGeracao.getText()));
 
+            Date data = converterParaDateSQL(textField6DataGeracao.getText());
+
+            if (data == null) {
+                JOptionPane.showMessageDialog(null, "Data inválida.");
+                return;
+            }
+
+            m.setA08_data_geracao(data);
             int idUsuario = Integer.parseInt(comboBox1Id_Usuario.getSelectedItem().toString().split(" - ")[0]);
             int idProjeto = Integer.parseInt(comboBox3NomeProjeto.getSelectedItem().toString().split(" - ")[0]);
 
@@ -194,7 +211,6 @@ public class Relatorios extends JDialog {
             JOptionPane.showMessageDialog(null, "Erro: " + e.getMessage());
         }
     }
-
     // -------------------------------------
     // EDITAR RELATÓRIO
     // -------------------------------------
@@ -211,8 +227,14 @@ public class Relatorios extends JDialog {
             m.setA08_id_relatorio(relatorioSelecionado);
             m.setA08_titulo(textField2Titulo.getText());
             m.setA08_conteudo(editorPane1Conteudo.getText());
-            m.setA08_data_geracao(Date.valueOf(textField6DataGeracao.getText()));
+            Date data = converterParaDateSQL(textField6DataGeracao.getText());
 
+            if (data == null) {
+                JOptionPane.showMessageDialog(null, "Data inválida.");
+                return;
+            }
+
+            m.setA08_data_geracao(data);
             int idUsuario = Integer.parseInt(comboBox1Id_Usuario.getSelectedItem().toString().split(" - ")[0]);
             int idProjeto = Integer.parseInt(comboBox3NomeProjeto.getSelectedItem().toString().split(" - ")[0]);
 
@@ -246,7 +268,29 @@ public class Relatorios extends JDialog {
             carregarTabela();
         }
     }
+    private void buscarRelatorio08() {
+        try {
+            String s = JOptionPane.showInputDialog("ID do relatório:");
 
+            if (s == null || s.isEmpty()) return;
+
+            int id = Integer.parseInt(s);
+
+            Model_Relatorio_08 r = controller.buscar(id);
+
+            if (r == null) {
+                JOptionPane.showMessageDialog(null, "Relatório não encontrado.");
+                return;
+            }
+
+            preencherFormulario(r);
+
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(null, "Digite um ID válido (somente números).");
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Erro ao buscar: " + e.getMessage());
+        }
+    }
     // -------------------------------------
     // CARREGAR CAMPOS QUANDO CLICAR NA LINHA
     // -------------------------------------
@@ -289,4 +333,34 @@ public class Relatorios extends JDialog {
                     "Erro ao carregar dados para edição: " + e.getMessage());
         }
     }
+    private void preencherFormulario(Model_Relatorio_08 r) {
+
+        relatorioSelecionado = r.getA08_id_relatorio();
+
+        textField2IdRelatorio.setText(String.valueOf(r.getA08_id_relatorio()));
+        textField2Titulo.setText(r.getA08_titulo());
+        textField6DataGeracao.setText(String.valueOf(r.getA08_data_geracao()));
+        editorPane1Conteudo.setText(r.getA08_conteudo());
+
+        // Selecionar usuário
+        for (int i = 0; i < comboBox1Id_Usuario.getItemCount(); i++) {
+            if (comboBox1Id_Usuario.getItemAt(i).toString()
+                    .startsWith(r.getA08_id_usuario() + " - ")) {
+                comboBox1Id_Usuario.setSelectedIndex(i);
+                break;
+            }
+        }
+
+        // Selecionar projeto
+        for (int i = 0; i < comboBox3NomeProjeto.getItemCount(); i++) {
+            if (comboBox3NomeProjeto.getItemAt(i).toString()
+                    .startsWith(r.getA08_id_projeto() + " - ")) {
+                comboBox3NomeProjeto.setSelectedIndex(i);
+                break;
+            }
+        }
+    }
+
 }
+
+

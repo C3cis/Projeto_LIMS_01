@@ -2,8 +2,10 @@ package Pck_View_LIMS;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.text.MaskFormatter;
 import java.awt.event.*;
 import java.sql.Date;
+import java.text.SimpleDateFormat;
 
 import Pck_Controller_LIMS.Controller_Fornecedor_04;
 import Pck_Controller_LIMS.Controller_Pedido_03;
@@ -15,7 +17,7 @@ import Pck_Model_LIMS.Model_Usuario_11;
 
 public class Pedidos extends JDialog {
     private JPanel contentPane;
-    private JTextField textField2Data_pedido;
+    private JFormattedTextField textField2Data_pedido;
     private JButton salvarButton;
     private JButton editarButton;
     private JButton excluirButton;
@@ -46,6 +48,7 @@ public class Pedidos extends JDialog {
         configurarTabela();
         carregarCombos();
         carregarTabela();
+        aplicarMascaraDatas();
 
         salvarButton.addActionListener(e -> salvarPedido());
         editarButton.addActionListener(e -> editarPedido());
@@ -81,6 +84,33 @@ public class Pedidos extends JDialog {
         table1Geral.getColumnModel().getColumn(2).setPreferredWidth(120);
         table1Geral.getColumnModel().getColumn(3).setPreferredWidth(150);
         table1Geral.getColumnModel().getColumn(4).setPreferredWidth(150);
+    }
+    private void aplicarMascaraDatas() {
+        try {
+            MaskFormatter mf = new MaskFormatter("##/##/####");
+            mf.setPlaceholderCharacter('_');
+            mf.install(textField2Data_pedido);  // Campo de data do pedido
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    private Date converterParaDateSQL(String dataStr) {
+        try {
+            if (dataStr == null) return null;
+            dataStr = dataStr.trim();
+            if (dataStr.isEmpty() || dataStr.contains("_")) return null;
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+            sdf.setLenient(false);
+            java.util.Date d = sdf.parse(dataStr);
+            return new Date(d.getTime());
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    private String converterDataParaTela(Date dataSQL) {
+        if (dataSQL == null) return "";
+        return new SimpleDateFormat("dd/MM/yyyy").format(dataSQL);
     }
     private void carregarCombos() {
 
@@ -120,10 +150,10 @@ public class Pedidos extends JDialog {
 
             tableModel.addRow(new Object[]{
                     p.getA03_id_pedido(),
-                    p.getA03_data_pedido(),
+                    converterDataParaTela(p.getA03_data_pedido()), // <- dd/MM/yyyy
                     p.getA03_status_pedido(),
-                    usuarioTexto,        // ← agora aparece ID + Nome
-                    fornecedorTexto      // ← agora aparece ID + Nome
+                    usuarioTexto,
+                    fornecedorTexto
             });
         }
     }
@@ -132,8 +162,12 @@ public class Pedidos extends JDialog {
         try {
             Model_Pedido_03 p = new Model_Pedido_03();
 
-            p.setA03_data_pedido(Date.valueOf(textField2Data_pedido.getText()));
-            p.setA03_status_pedido(comboBox1Status_pedido.getSelectedItem().toString());
+            Date dataPedido = converterParaDateSQL(textField2Data_pedido.getText());
+            if (dataPedido == null) {
+                JOptionPane.showMessageDialog(null, "Data inválida! Use dd/MM/yyyy.");
+                return;
+            }
+            p.setA03_data_pedido(dataPedido);            p.setA03_status_pedido(comboBox1Status_pedido.getSelectedItem().toString());
             p.setA03_observacoes(editorPane1.getText());
 
             String usuarioSelect = comboBox2ID_USUARIO.getSelectedItem().toString();
@@ -235,7 +269,7 @@ public class Pedidos extends JDialog {
                 return;
             }
 
-            textField2Data_pedido.setText(p.getA03_data_pedido().toString());
+            textField2Data_pedido.setText(converterDataParaTela(p.getA03_data_pedido()));
             comboBox1Status_pedido.setSelectedItem(p.getA03_status_pedido());
             editorPane1.setText(p.getA03_observacoes());
 
@@ -269,7 +303,7 @@ public class Pedidos extends JDialog {
 
         if (p == null) return;
 
-        textField2Data_pedido.setText(p.getA03_data_pedido().toString());
+        textField2Data_pedido.setText(converterDataParaTela(p.getA03_data_pedido()));
         comboBox1Status_pedido.setSelectedItem(p.getA03_status_pedido());
         editorPane1.setText(p.getA03_observacoes());
 
