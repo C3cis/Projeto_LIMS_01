@@ -1,5 +1,4 @@
 package Pck_View_LIMS;
-
 import Pck_Controller_LIMS.Controller_Produto_02;
 import Pck_Controller_LIMS.Controller_Projeto_01;
 import Pck_Controller_LIMS.Controller_Fornecedor_04;
@@ -8,19 +7,18 @@ import Pck_Model_LIMS.Model_Produto_02;
 import Pck_Model_LIMS.Model_Projeto_01;
 import Pck_Model_LIMS.Model_Fornecedor_04;
 
+import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
-import java.util.Locale;
-import java.util.List;
-import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.text.MaskFormatter;
 import java.awt.event.*;
 import java.sql.Date;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 public class Produtos extends JDialog {
 
@@ -32,7 +30,6 @@ public class Produtos extends JDialog {
 
     private JFormattedTextField textField1DataCadastro;
     private JFormattedTextField textField6DataChegada;
-
 
     private JComboBox<String> comboBox1Fornecedor;
     private JComboBox<String> comboBox2Status;
@@ -48,7 +45,6 @@ public class Produtos extends JDialog {
 
     private int produtoSelecionado = -1;
 
-    // ---------- Construtor (ajuste dos controllers) ----------
     public Produtos() {
         setContentPane(contentPane);
         setModal(true);
@@ -56,7 +52,6 @@ public class Produtos extends JDialog {
         setSize(1100, 700);
         setLocationRelativeTo(null);
 
-        // controllers: manter o padrão que você já usava
         controller = new Controller_Produto_02(DAO_Conexao.connect());
         controllerFornecedor = new Controller_Fornecedor_04();
         controllerProjeto = new Controller_Projeto_01();
@@ -69,10 +64,10 @@ public class Produtos extends JDialog {
         salvarButton.addActionListener(e -> salvarProduto());
         editarButton.addActionListener(e -> editarProduto());
         excluirButton.addActionListener(e -> excluirProduto());
-        buscarButton.addActionListener(e -> carregarTabela());
+        buscarButton.addActionListener(e -> buscarProdutoPorID());
         sairButton.addActionListener(e -> dispose());
 
-        // carregamento ao selecionar linha (mais robusto que mouseClicked)
+        // Seleção da tabela
         table1.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) {
@@ -83,9 +78,7 @@ public class Produtos extends JDialog {
         });
     }
 
-    // ------------------------------------------------------------
-// MÁSCARA DE DATA: dd/MM/yyyy (mantive seu comportamento)
-// ------------------------------------------------------------
+    // ---------------- MÁSCARA DE DATAS ----------------
     private void aplicarMascaraDatas() {
         try {
             MaskFormatter mf1 = new MaskFormatter("##/##/####");
@@ -97,15 +90,12 @@ public class Produtos extends JDialog {
             mf2.setPlaceholderCharacter('_');
             mf2.install(textField6DataChegada);
             textField6DataChegada.setFocusLostBehavior(JFormattedTextField.COMMIT);
-
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    // ------------------------------------------------------------
-// CONFIGURA TABELA (remove descrição, exibe Projeto/Fornecedor como "ID - Nome")
-// ------------------------------------------------------------
+    // ---------------- CONFIGURAR TABELA ----------------
     private void configurarTabela() {
         tableModel = new DefaultTableModel(
                 new String[]{
@@ -117,11 +107,8 @@ public class Produtos extends JDialog {
         table1.setModel(tableModel);
     }
 
-    // ------------------------------------------------------------
-// CARREGA COMBOS (usa os métodos que você já tinha)
-// ------------------------------------------------------------
+    // ---------------- CARREGAR COMBOS ----------------
     private void carregarCombos() {
-
         comboBox2Status.removeAllItems();
         comboBox2Status.addItem("CONSUMO");
         comboBox2Status.addItem("PATRIMONIO");
@@ -136,7 +123,7 @@ public class Produtos extends JDialog {
         }
 
         comboBox3NomeProjeto.removeAllItems();
-        List<Model_Projeto_01> listaP = controllerProjeto.listar_projeto(); // conforme seu código original
+        List<Model_Projeto_01> listaP = controllerProjeto.listar_projeto();
         if (listaP != null) {
             for (Model_Projeto_01 p : listaP) {
                 comboBox3NomeProjeto.addItem(p.getA01_id_projeto() + " - " + p.getA01_nome_projeto());
@@ -144,19 +131,14 @@ public class Produtos extends JDialog {
         }
     }
 
-    // ------------------------------------------------------------
-// CARREGA TABELA (formata datas e valor; monta "ID - Nome" procurando no cache local)
-// ------------------------------------------------------------
+    // ---------------- CARREGAR TABELA ----------------
     private void carregarTabela() {
-
         tableModel.setRowCount(0);
 
-        // pegar listas de projetos/fornecedores para montar nome sem chamar buscar por id
         List<Model_Projeto_01> projetos = controllerProjeto.listar_projeto();
         List<Model_Fornecedor_04> fornecedores = controllerFornecedor.listarFornecedores();
 
         for (Model_Produto_02 p : controller.listarProdutos()) {
-
             String projetoFormatado = formatarIdNomeProjeto(projetos, p.getA02_id_projeto());
             String fornecedorFormatado = formatarIdNomeFornecedor(fornecedores, p.getA02_id_fornecedor());
 
@@ -197,12 +179,10 @@ public class Produtos extends JDialog {
 
     private String safeDataParaTela(Date d) {
         if (d == null) return "";
-        return converterDataParaTela(d);
+        return new SimpleDateFormat("dd/MM/yyyy").format(d);
     }
 
-    // ------------------------------------------------------------
-// SALVAR PRODUTO (validações e conversões mais robustas)
-// ------------------------------------------------------------
+    // ---------------- SALVAR PRODUTO ----------------
     private void salvarProduto() {
         try {
             String nome = textField2nomeProduto.getText().trim();
@@ -212,46 +192,17 @@ public class Produtos extends JDialog {
             }
 
             String descricao = editorPane1Descricao.getText();
-            if (comboBox2Status.getSelectedItem() == null) {
-                JOptionPane.showMessageDialog(null, "Selecione o tipo/status.");
-                return;
-            }
-            String tipo = comboBox2Status.getSelectedItem().toString();
+            String tipo = comboBox2Status.getSelectedItem() == null ? "" : comboBox2Status.getSelectedItem().toString();
 
             Date dataCadastro = converterParaDateSQL(textField1DataCadastro.getText());
-            if (dataCadastro == null) {
-                JOptionPane.showMessageDialog(null, "Data de cadastro inválida.");
-                return;
-            }
             Date dataChegada = converterParaDateSQL(textField6DataChegada.getText());
-            if (dataChegada == null) {
-                JOptionPane.showMessageDialog(null, "Data de chegada inválida.");
-                return;
-            }
-
             double valor = converterValor(textField3ValorProd.getText());
-            if (valor < 0) {
-                JOptionPane.showMessageDialog(null, "Valor inválido.");
-                return;
-            }
-
-            if (comboBox3NomeProjeto.getSelectedItem() == null || comboBox1Fornecedor.getSelectedItem() == null) {
-                JOptionPane.showMessageDialog(null, "Selecione projeto e fornecedor.");
-                return;
-            }
 
             int idProjeto = extrairId(comboBox3NomeProjeto.getSelectedItem().toString());
             int idFornecedor = extrairId(comboBox1Fornecedor.getSelectedItem().toString());
 
             boolean ok = controller.inserirProduto(
-                    nome,
-                    descricao,
-                    tipo,
-                    dataCadastro,
-                    dataChegada,
-                    valor,
-                    idProjeto,
-                    idFornecedor
+                    nome, descricao, tipo, dataCadastro, dataChegada, valor, idProjeto, idFornecedor
             );
 
             if (ok) {
@@ -260,15 +211,12 @@ public class Produtos extends JDialog {
             } else {
                 JOptionPane.showMessageDialog(null, "Erro ao cadastrar produto.");
             }
-
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, "Erro ao salvar: " + ex.getMessage());
         }
     }
 
-    // ------------------------------------------------------------
-// EDITAR PRODUTO
-// ------------------------------------------------------------
+    // ---------------- EDITAR PRODUTO ----------------
     private void editarProduto() {
         if (produtoSelecionado == -1) {
             JOptionPane.showMessageDialog(null, "Selecione um produto.");
@@ -277,44 +225,16 @@ public class Produtos extends JDialog {
 
         try {
             String nome = textField2nomeProduto.getText().trim();
-            if (nome.isEmpty()) {
-                JOptionPane.showMessageDialog(null, "Preencha o nome do produto.");
-                return;
-            }
-
             String descricao = editorPane1Descricao.getText();
             String tipo = comboBox2Status.getSelectedItem().toString();
-
             Date dataCadastro = converterParaDateSQL(textField1DataCadastro.getText());
-            if (dataCadastro == null) {
-                JOptionPane.showMessageDialog(null, "Data de cadastro inválida.");
-                return;
-            }
             Date dataChegada = converterParaDateSQL(textField6DataChegada.getText());
-            if (dataChegada == null) {
-                JOptionPane.showMessageDialog(null, "Data de chegada inválida.");
-                return;
-            }
-
             double valor = converterValor(textField3ValorProd.getText());
-            if (valor < 0) {
-                JOptionPane.showMessageDialog(null, "Valor inválido.");
-                return;
-            }
-
             int idProjeto = extrairId(comboBox3NomeProjeto.getSelectedItem().toString());
             int idFornecedor = extrairId(comboBox1Fornecedor.getSelectedItem().toString());
 
             boolean ok = controller.atualizarProduto(
-                    produtoSelecionado,
-                    nome,
-                    descricao,
-                    tipo,
-                    dataCadastro,
-                    dataChegada,
-                    valor,
-                    idProjeto,
-                    idFornecedor
+                    produtoSelecionado, nome, descricao, tipo, dataCadastro, dataChegada, valor, idProjeto, idFornecedor
             );
 
             if (ok) {
@@ -323,15 +243,12 @@ public class Produtos extends JDialog {
             } else {
                 JOptionPane.showMessageDialog(null, "Erro ao atualizar produto.");
             }
-
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, "Erro ao editar: " + ex.getMessage());
         }
     }
 
-    // ------------------------------------------------------------
-// EXCLUIR PRODUTO
-// ------------------------------------------------------------
+    // ---------------- EXCLUIR PRODUTO ----------------
     private void excluirProduto() {
         if (produtoSelecionado == -1) {
             JOptionPane.showMessageDialog(null, "Selecione um produto.");
@@ -349,9 +266,7 @@ public class Produtos extends JDialog {
         }
     }
 
-    // ------------------------------------------------------------
-// CARREGAR CAMPOS AO CLICAR NA TABELA (ajustado para novo formato)
-// ------------------------------------------------------------
+    // ---------------- CARREGAR CAMPOS DA LINHA ----------------
     private void carregarCamposDaLinha() {
         int row = table1.getSelectedRow();
         if (row == -1) return;
@@ -360,30 +275,57 @@ public class Produtos extends JDialog {
 
         textField2nomeProduto.setText(tableModel.getValueAt(row, 1).toString());
         comboBox2Status.setSelectedItem(tableModel.getValueAt(row, 2).toString());
-
-        // datas já estão como String "dd/MM/yyyy" na tabela
         textField1DataCadastro.setText(tableModel.getValueAt(row, 3).toString());
         textField6DataChegada.setText(tableModel.getValueAt(row, 4).toString());
 
-        // valor: "R$ 1.234,56" -> remover prefixo e pontos de milhar
-        String valorStr = tableModel.getValueAt(row, 5).toString();
-        valorStr = valorStr.replace("R$", "").trim();
+        String valorStr = tableModel.getValueAt(row, 5).toString().replace("R$", "").trim();
         textField3ValorProd.setText(valorStr);
 
         selecionarItemCombo(comboBox3NomeProjeto, tableModel.getValueAt(row, 6).toString());
         selecionarItemCombo(comboBox1Fornecedor, tableModel.getValueAt(row, 7).toString());
+
+        // Busca a descrição do produto no controller e preenche
+        Model_Produto_02 produto = controller.buscarProduto(produtoSelecionado);
+        if (produto != null) {
+            editorPane1Descricao.setText(produto.getA02_descricao());
+        }
     }
 
-    // ------------------------------------------------------------
-// UTILITÁRIOS
-// ------------------------------------------------------------
+    // ---------------- BUSCA POR ID ----------------
+    private void buscarProdutoPorID() {
+        String input = JOptionPane.showInputDialog(null, "Digite o ID do produto:");
+        if (input == null || input.trim().isEmpty()) return;
+
+        try {
+            int id = Integer.parseInt(input.trim());
+            boolean encontrado = false;
+
+            for (int i = 0; i < tableModel.getRowCount(); i++) {
+                int idTabela = (int) tableModel.getValueAt(i, 0);
+                if (idTabela == id) {
+                    table1.setRowSelectionInterval(i, i);
+                    table1.scrollRectToVisible(table1.getCellRect(i, 0, true));
+                    carregarCamposDaLinha();
+                    encontrado = true;
+                    break;
+                }
+            }
+
+            if (!encontrado) {
+                JOptionPane.showMessageDialog(null, "Produto não encontrado.");
+            }
+        } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(null, "Digite um ID válido.");
+        }
+    }
+
+    // ---------------- UTILITÁRIOS ----------------
     private Date converterParaDateSQL(String dataStr) {
         try {
             if (dataStr == null) return null;
             dataStr = dataStr.trim();
             if (dataStr.isEmpty() || dataStr.contains("_")) return null;
             SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-            sdf.setLenient(false);
             java.util.Date d = sdf.parse(dataStr);
             return new Date(d.getTime());
         } catch (Exception e) {
@@ -401,10 +343,7 @@ public class Produtos extends JDialog {
 
     private double converterValor(String texto) {
         if (texto == null) return -1;
-        String t = texto.replace("R$", "").replace(" ", "").trim();
-        // aceita R$1.234,56 ou 1234.56 ou 1,234.56 etc.
-        // remover pontos de milhar e transformar vírgula em ponto
-        t = t.replace(".", "").replace(",", ".");
+        String t = texto.replace("R$", "").replace(" ", "").trim().replace(".", "").replace(",", ".");
         try {
             return Double.parseDouble(t);
         } catch (Exception e) {
@@ -413,19 +352,12 @@ public class Produtos extends JDialog {
     }
 
     private String formatarValorBR(double valor) {
-        // Locale moderno (não depreciado)
-        Locale localeBR = Locale.of("pt", "BR");
-
+        Locale localeBR = new Locale("pt", "BR");
         DecimalFormatSymbols symbols = new DecimalFormatSymbols(localeBR);
         symbols.setDecimalSeparator(',');
         symbols.setGroupingSeparator('.');
-
         DecimalFormat df = new DecimalFormat("#,##0.00", symbols);
         return "R$ " + df.format(valor);
-    }
-    private String converterDataParaTela(Date dataSQL) {
-        if (dataSQL == null) return "";
-        return new SimpleDateFormat("dd/MM/yyyy").format(dataSQL);
     }
 
     private void selecionarItemCombo(JComboBox<String> combo, String valor) {

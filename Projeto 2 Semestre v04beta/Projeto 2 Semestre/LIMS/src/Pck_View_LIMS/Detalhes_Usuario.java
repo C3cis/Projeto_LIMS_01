@@ -1,6 +1,12 @@
 package Pck_View_LIMS;
+import Pck_Controller_LIMS.Controller_Produto_02;
+import Pck_Controller_LIMS.Controller_Projeto_01;
+import Pck_DAO_LIMS.DAO_Conexao;
+import Pck_Model_LIMS.Model_Produto_02;
+import Pck_Model_LIMS.Model_Projeto_01;
 import Pck_Model_LIMS.Model_Visualizar_Dados;
-import Pck_Model_LIMS.Model_Visualizar_Dados;
+import Pck_Persistencia_LIMS.Persistencia_Produto_02;
+import Pck_Persistencia_LIMS.Persistencia_Projeto_01;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -9,63 +15,78 @@ import java.awt.*;
 public class Detalhes_Usuario extends JDialog {
 
     private JPanel contentPane;
-    private JTable tabelaGeral;
-    private JEditorPane textDetalhes;
-    private JButton bntFecha;
-    public Detalhes_Usuario(Frame parent, Model_Visualizar_Dados dados) {
-        super(parent, "Detalhes do Produto", true);
 
-        setContentPane(criarLayout());
-        preencherCampos(dados);
+    private JTable tableDetalhes;
+    private DefaultTableModel tableModel;
 
-        setSize(600, 400);
+    private final Persistencia_Projeto_01 persistenciaProjeto = new Persistencia_Projeto_01();
+    private final Persistencia_Produto_02 persistenciaProduto = new Persistencia_Produto_02(DAO_Conexao.connect());
+
+    public Detalhes_Usuario(Frame parent, Model_Visualizar_Dados registro) {
+        super(parent, "Detalhes do Registro", true);
+
+        initUI();
+        carregarDetalhes(registro);
+
+        setSize(800, 300);
         setLocationRelativeTo(parent);
     }
 
-    // -----------------------------
-    // CRIA O LAYOUT DA JANELA
-    // -----------------------------
-    private JPanel criarLayout() {
-        contentPane = new JPanel(new BorderLayout());
+    private void initUI() {
+        JPanel contentPane = new JPanel(new BorderLayout(8, 8));
+        contentPane.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
+        setContentPane(contentPane);
 
-        textDetalhes = new JEditorPane();
-        textDetalhes.setEditable(false);
-        textDetalhes.setContentType("text/plain");
-
-        tabelaGeral = new JTable(new DefaultTableModel(
-                new Object[]{"Campo", "Valor"},
+        // Tabela de detalhes
+        tableModel = new DefaultTableModel(
+                new Object[]{"ID Projeto", "Nome Projeto", "Descrição Projeto",
+                        "ID Produto", "Nome Produto", "Descrição Produto",
+                        "Data Chegada", "Fornecedor"},
                 0
-        ));
-        tabelaGeral.setEnabled(false);
+        ) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
 
-        contentPane.add(new JScrollPane(textDetalhes), BorderLayout.NORTH);
-        contentPane.add(new JScrollPane(tabelaGeral), BorderLayout.CENTER);
+        tableDetalhes = new JTable(tableModel);
+        tableDetalhes.setRowHeight(28);
+        tableDetalhes.setFillsViewportHeight(true);
 
-        return contentPane;
+        JScrollPane scrollPane = new JScrollPane(tableDetalhes);
+        contentPane.add(scrollPane, BorderLayout.CENTER);
+
+        // Botão fechar
+        JButton btnFechar = new JButton("Fechar");
+        btnFechar.addActionListener(e -> dispose());
+        JPanel painelBotoes = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        painelBotoes.add(btnFechar);
+        contentPane.add(painelBotoes, BorderLayout.SOUTH);
     }
 
-    // -----------------------------
-    // PREENCHER CAMPOS DA TELA
-    // -----------------------------
-    private void preencherCampos(Model_Visualizar_Dados m) {
+    private void carregarDetalhes(Model_Visualizar_Dados registro) {
+        try {
+            // Buscar detalhes do projeto e do produto
+            Model_Projeto_01 projeto = persistenciaProjeto.buscar_projeto(registro.getIdProjeto());
+            Model_Produto_02 produto = persistenciaProduto.buscarProduto(registro.getIdProduto());
 
-        // Painel superior com texto
-        textDetalhes.setText(
-                "ID Produto: " + m.getIdProduto() + "\n" +
-                        "Nome Produto: " + m.getNomeProduto() + "\n" +
-                        "Tipo: " + m.getTipoProduto() + "\n" +
-                        "Data Chegada: " + m.getDataChegada() + "\n" +
-                        "Fornecedor: " + m.getNomeFornecedor() + "\n" +
-                        "ID Projeto: " + m.getIdProjeto()
-        );
+            // Limpar tabela
+            tableModel.setRowCount(0);
 
-        // Tabela com todos os campos
-        DefaultTableModel model = (DefaultTableModel) tabelaGeral.getModel();
-        model.addRow(new Object[]{"ID Produto", m.getIdProduto()});
-        model.addRow(new Object[]{"Nome Produto", m.getNomeProduto()});
-        model.addRow(new Object[]{"Tipo Produto", m.getTipoProduto()});
-        model.addRow(new Object[]{"Data Chegada", m.getDataChegada()});
-        model.addRow(new Object[]{"Fornecedor", m.getNomeFornecedor()});
-        model.addRow(new Object[]{"ID Projeto", m.getIdProjeto()});
+            // Adicionar linha com todos os detalhes
+            tableModel.addRow(new Object[]{
+                    projeto.getA01_id_projeto(), projeto.getA01_nome_projeto(), projeto.getA01_descricao(),
+                    produto.getA02_id_produto(), produto.getA02_nome_produto(), produto.getA02_descricao(),
+                    registro.getDataChegada(),
+                    registro.getNomeFornecedor()
+            });
+
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this,
+                    "Erro ao carregar detalhes:\n" + ex.getMessage(),
+                    "Erro",
+                    JOptionPane.ERROR_MESSAGE);
+        }
     }
 }

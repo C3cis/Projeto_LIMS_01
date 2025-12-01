@@ -79,7 +79,11 @@
         <children>
           <component id="7c5b7" class="javax.swing.JTable" binding="table1" default-binding="true">
             <constraints/>
-            <properties/>
+            <properties>
+              <autoCreateRowSorter value="true"/>
+              <autoResizeMode value="1"/>
+              <dropMode value="INSERT_ROWS"/>
+            </properties>
           </component>
         </children>
       </scrollpane>
