@@ -14,15 +14,15 @@ public class Controller_Produto_02 {
         this.persistencia = new Persistencia_Produto_02(conexao);
     }
 
-    // ----------------------------------------------------------------------
+    // ------------------------------------------------------------
     // INSERIR
-    // ----------------------------------------------------------------------
+    // ------------------------------------------------------------
     public boolean inserirProduto(
             String nome,
             String descricao,
             String tipo,
-            java.util.Date dataCadastro,
-            java.util.Date dataChegada,
+            java.sql.Date dataCadastro,
+            java.sql.Date dataChegada,
             double valorUnitario,
             int idProjeto,
             int idFornecedor
@@ -34,8 +34,8 @@ public class Controller_Produto_02 {
             produto.setA02_nome_produto(nome);
             produto.setA02_descricao(descricao);
             produto.setA02_tipo(tipo);
-            produto.setA02_data_cadastro(new java.sql.Date(dataCadastro.getTime()));
-            produto.setA02_data_chegada(new java.sql.Date(dataChegada.getTime()));
+            produto.setA02_data_cadastro(dataCadastro);
+            produto.setA02_data_chegada(dataChegada);
             produto.setA02_valor_unitario(valorUnitario);
             produto.setA02_id_projeto(idProjeto);
             produto.setA02_id_fornecedor(idFornecedor);
@@ -48,20 +48,21 @@ public class Controller_Produto_02 {
         }
     }
 
-    // ----------------------------------------------------------------------
+    // ------------------------------------------------------------
     // ATUALIZAR
-    // ----------------------------------------------------------------------
+    // ------------------------------------------------------------
     public boolean atualizarProduto(
             int idProduto,
             String nome,
             String descricao,
             String tipo,
-            java.util.Date dataCadastro,
-            java.util.Date dataChegada,
+            java.sql.Date dataCadastro,
+            java.sql.Date dataChegada,
             double valorUnitario,
             int idProjeto,
             int idFornecedor
     ) {
+
         try {
             Model_Produto_02 produto = new Model_Produto_02();
 
@@ -69,8 +70,8 @@ public class Controller_Produto_02 {
             produto.setA02_nome_produto(nome);
             produto.setA02_descricao(descricao);
             produto.setA02_tipo(tipo);
-            produto.setA02_data_cadastro(new java.sql.Date(dataCadastro.getTime()));
-            produto.setA02_data_chegada(new java.sql.Date(dataChegada.getTime()));
+            produto.setA02_data_cadastro(dataCadastro);
+            produto.setA02_data_chegada(dataChegada);
             produto.setA02_valor_unitario(valorUnitario);
             produto.setA02_id_projeto(idProjeto);
             produto.setA02_id_fornecedor(idFornecedor);
@@ -83,23 +84,23 @@ public class Controller_Produto_02 {
         }
     }
 
-    // ----------------------------------------------------------------------
+    // ------------------------------------------------------------
     // EXCLUIR
-    // ----------------------------------------------------------------------
+    // ------------------------------------------------------------
     public boolean excluirProduto(int idProduto) {
         return persistencia.excluirProduto(idProduto);
     }
 
-    // ----------------------------------------------------------------------
-    // BUSCAR
-    // ----------------------------------------------------------------------
+    // ------------------------------------------------------------
+    // BUSCAR POR ID
+    // ------------------------------------------------------------
     public Model_Produto_02 buscarProduto(int idProduto) {
         return persistencia.buscarProduto(idProduto);
     }
 
-    // ----------------------------------------------------------------------
-    // LISTAR
-    // ----------------------------------------------------------------------
+    // ------------------------------------------------------------
+    // LISTAR TODOS
+    // ------------------------------------------------------------
     public ArrayList<Model_Produto_02> listarProdutos() {
         return persistencia.listarProdutos();
     }
